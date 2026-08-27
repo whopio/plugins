@@ -19,8 +19,10 @@ prefer, and no CLI to install.
    (`payments_list`, `products_create`). Read the tool's own schema before calling
    it. Never invent a tool name, a field, or an enum value — if you cannot find it,
    say so and ask.
-3. **Know the account.** Account-scoped operations act on the selected business.
-   To target a different one, pass its account id (`biz_…`) explicitly.
+3. **Know the account.** `connection_status` returns `account_id`, and it is often
+   **null** — a user grant is not bound to one business. When it is null, nothing is
+   selected for you: get the id from `accounts_list` and pass `account_id` (`biz_…`)
+   explicitly on account-scoped calls. Never assume a default business.
 
 ## Before any write
 

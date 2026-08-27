@@ -77,9 +77,12 @@ Say so plainly rather than reporting success.
 
 ## 3. Scope — what the grant actually allows
 
-The hosted endpoint requests the MCP **`admin`** scope. That is the full
-administrative profile for the reviewed MCP surface — not read-only, not per-tool,
-and **not bound to a single business**. It can act on every business the
+The hosted endpoint requests the MCP **`admin`** scope. `connection_status`
+reports it as `permission_profile: "admin"` with `granted_scopes: ["*"]` — match on
+the profile, not on the literal string `admin` in the scope list.
+
+That is the full administrative profile for the reviewed MCP surface — not read-only,
+not per-tool, and **not bound to a single business**. It can act on every business the
 authenticated Whop user manages.
 
 Two consequences worth stating to the user when it matters:

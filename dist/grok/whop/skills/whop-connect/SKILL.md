@@ -13,9 +13,17 @@ skip ahead to a business action — this command's only job is the connection.
 
 1. **Call `connection_status`.**
 
-   - **It works** → report, in plain language: the authenticated user, the selected
-     account (name and `biz_…` id), the granted scopes, and how many tools are
-     available. Then stop and ask what they want to do.
+   - **It works** → report, in plain language: the authenticated user
+     (`user_name`), the permission profile, and how many tools are available.
+     Then handle the account:
+     - **`account_id` is set** → name the account and its `biz_…` id.
+     - **`account_id` is null** → say plainly that no account is selected yet, then
+       call `accounts_list`. One account: name it and say it will be used when the
+       user passes its id. Several: list them and ask which. None: say the user has
+       no Whop business yet and point them at whop.com.
+
+     Do not invent an account, and do not report a null account as if it were one.
+     Then stop and ask what they want to do.
    - **The tool is missing entirely** → the MCP server has not loaded. Tell the user
      to open `/plugins` and confirm the `whop` plugin is enabled, then `/mcps` to
      check the `whop` server's state. `grok mcp doctor whop` diagnoses configuration
