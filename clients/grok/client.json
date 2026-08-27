@@ -1,0 +1,13 @@
+{
+  "client": "grok",
+  "displayName": "Grok Build",
+  "manifestPath": ".grok-plugin/plugin.json",
+  "mcpConfigPath": ".mcp.json",
+  "tokens": {
+    "CLIENT_NAME": "Grok",
+    "CONNECT_COMMAND": "`/whop-connect`"
+  },
+  "manifest": {
+    "description": "Run a business on Whop from Grok Build. Launch a website, sell products, take payments, run ads, and read your numbers."
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "whop",
+  "description": "Run a business on Whop from Grok Build (hosted MCP server + skills). Launch a website on *.whop.app, create products and checkout, take payments and payouts, manage members, run Meta and TikTok ads, form an LLC, and read your stats.",
+  "category": "development",
+  "source": {
+    "source": "url",
+    "url": "https://github.com/whopio/whop-plugins.git",
+    "sha": "REPLACE_WITH_40_CHAR_COMMIT_SHA",
+    "path": "dist/grok/whop"
+  },
+  "homepage": "https://docs.whop.com/",
+  "keywords": [
+    "whop",
+    "sell online",
+    "accept payments",
+    "online store",
+    "memberships",
+    "run ads"
+  ],
+  "domains": [
+    "whop.com",
+    "docs.whop.com",
+    "whop.app"
+  ]
+}

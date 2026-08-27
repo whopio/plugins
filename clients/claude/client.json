@@ -1,0 +1,14 @@
+{
+  "client": "claude",
+  "displayName": "Claude Code",
+  "manifestPath": ".claude-plugin/plugin.json",
+  "mcpConfigPath": ".mcp.json",
+  "tokens": {
+    "CLIENT_NAME": "Claude",
+    "CONNECT_COMMAND": "`/whop:whop-connect`"
+  },
+  "manifest": {
+    "$schema": "https://www.schemastore.org/claude-code-plugin-manifest.json",
+    "description": "Build and run your business end-to-end with Whop. Launch a website, sell products, take payments, run ads, and read your numbers — from Claude Code."
+  }
+}

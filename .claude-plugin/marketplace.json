@@ -1,0 +1,34 @@
+{
+  "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
+  "name": "whop",
+  "owner": {
+    "name": "Whop",
+    "url": "https://whop.com"
+  },
+  "metadata": {
+    "description": "Official Whop plugins for Claude Code.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "whop",
+      "source": "./dist/claude/whop",
+      "description": "Build and run your business end-to-end with Whop. Launch a website, sell products, take payments, run ads, and read your numbers — from Claude Code.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Whop"
+      },
+      "homepage": "https://docs.whop.com/",
+      "license": "Apache-2.0",
+      "keywords": [
+        "whop",
+        "sell online",
+        "accept payments",
+        "online store",
+        "memberships",
+        "run ads"
+      ],
+      "category": "payments"
+    }
+  ]
+}
