@@ -13,7 +13,7 @@
     {
       "name": "whop",
       "source": "./dist/claude/whop",
-      "description": "Build and run your business end-to-end with Whop. Launch a website, sell products, take payments, run ads, and read your numbers — from Claude Code.",
+      "description": "Build and run your online business on Whop directly from Claude Code. This plugin connects Claude to the Whop MCP server, giving it authenticated access to your Whop account so you can launch websites, sell products, accept payments, run ads, and read your business metrics without leaving your coding environment.\n\nKey features include one-command website deployments to *.whop.app, product and membership creation with instant checkout links, payment management including refunds, payouts, and disputes, Meta and TikTok ad campaign creation with AI-generated creatives, LLC and C-corp formation, bounties for hiring, and revenue and member analytics on demand. Every consequential action (payments, refunds, transfers, deletions) uses a preview-then-confirm flow, and the plugin handles Whop sign-in through your browser automatically — no CLI or API keys required.\n\nHow to use: Run /whop:whop-connect to sign in and see which accounts and tools Claude can reach. Then just describe what you want in plain language — say \"deploy this site to whop.app,\" \"create a $29/month membership with a free trial,\" \"refund this customer,\" or \"show me this month's revenue\" — and Claude uses the right Whop tools to get it done.",
       "version": "1.0.0",
       "author": {
         "name": "Whop"
