@@ -7,7 +7,7 @@ Official Whop plugin for whatever AI agent you use. Works with Claude Code and G
 **Claude Code**
 
 ```
-/plugin marketplace add whopio/whop-plugins
+/plugin marketplace add whopio/plugins
 /plugin install whop@whop
 ```
 

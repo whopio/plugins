@@ -4,8 +4,8 @@
   "category": "development",
   "source": {
     "source": "url",
-    "url": "https://github.com/whopio/whop-plugins.git",
-    "sha": "REPLACE_WITH_40_CHAR_COMMIT_SHA",
+    "url": "https://github.com/whopio/plugins.git",
+    "sha": "fe4ac0eb023a1e97b6efe629f1f5931748a85499",
     "path": "dist/grok/whop"
   },
   "homepage": "https://docs.whop.com/",
