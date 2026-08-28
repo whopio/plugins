@@ -6,7 +6,8 @@ Layering, in order:
   3. shared/mcp.json         -> <out>/<mcpConfigPath>
   4. shared/plugin.base.json + clients/<c>/client.json:manifest -> <out>/<manifestPath>
 
-Every {{TOKEN}} in a copied Markdown file is replaced from client.json:tokens.
+Every {{TOKEN}} in a copied Markdown or JSON file is replaced from
+client.json:tokens, plus CLIENT_KEY and PLUGIN_VERSION injected here.
 An unresolved token is a hard error: a client that forgets one must not ship.
 """
 
@@ -44,7 +45,12 @@ def copy_tree(src: Path, dst: Path, tokens: dict) -> None:
 def main() -> None:
     client, out = sys.argv[1], Path(sys.argv[2])
     cfg = json.loads(Path(f"clients/{client}/client.json").read_text())
-    tokens = cfg.get("tokens", {})
+    base = json.loads(Path("shared/plugin.base.json").read_text())
+    tokens = {
+        "CLIENT_KEY": client,
+        "PLUGIN_VERSION": base.get("version", "0.0.0"),
+        **cfg.get("tokens", {}),
+    }
 
     copy_tree(Path("shared/skills"), out / "skills", tokens)
 
@@ -52,11 +58,12 @@ def main() -> None:
     if client_skills.is_dir():
         copy_tree(client_skills, out / "skills", tokens)
 
+    mcp_src = Path("shared/mcp.json")
     mcp_dst = out / cfg["mcpConfigPath"]
     mcp_dst.parent.mkdir(parents=True, exist_ok=True)
-    mcp_dst.write_text(Path("shared/mcp.json").read_text(), encoding="utf-8")
+    mcp_dst.write_text(render(mcp_src.read_text(), tokens, mcp_src), encoding="utf-8")
 
-    manifest = json.loads(Path("shared/plugin.base.json").read_text())
+    manifest = dict(base)
     manifest.update(cfg.get("manifest", {}))
     # $schema, when present, is conventionally first
     ordered = {k: manifest[k] for k in ("$schema",) if k in manifest}

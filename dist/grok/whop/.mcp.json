@@ -2,7 +2,10 @@
   "mcpServers": {
     "whop": {
       "type": "http",
-      "url": "https://mcp.whop.com/mcp"
+      "url": "https://mcp.whop.com/mcp",
+      "headers": {
+        "X-Whop-Plugin": "grok/1.0.0"
+      }
     }
   }
 }
