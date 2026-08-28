@@ -5,7 +5,7 @@
   "source": {
     "source": "url",
     "url": "https://github.com/whopio/plugins.git",
-    "sha": "fe4ac0eb023a1e97b6efe629f1f5931748a85499",
+    "sha": "c804aa9f7597ed6f2de0289c28d80882da05b79c",
     "path": "dist/grok/whop"
   },
   "homepage": "https://docs.whop.com/",
