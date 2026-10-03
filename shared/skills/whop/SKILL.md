@@ -24,13 +24,6 @@ prefer, and no CLI to install.
    selected for you: get the id from `accounts_list` and pass `account_id` (`biz_…`)
    explicitly on account-scoped calls. Never assume a default business.
 
-## Before any write
-
-**Read `whop-mcp-safety` before your first mutating call in a session.** Whop's
-consequential operations use a prepare-and-confirm handshake plus required
-attribution fields that are easy to get wrong and expensive to get wrong. That
-skill is the protocol; this one is the map.
-
 ## What to run
 
 | Job | Start here | Playbook |
@@ -74,9 +67,6 @@ with `files_create` / `files_complete`, register it with `app_builds_create`, th
   date of birth, home address) are legitimate inputs to the flows that need them.
   Pass them straight through to the tool. Never repeat them back in your response,
   write them to a file, or infer a value the user did not supply.
-- **Money and identity are the user's call.** Confirm before executing any financial,
-  credential, or destructive operation, subject to the narrow exceptions in
-  `whop-mcp-safety`.
 
 ## What these tools cannot reach
 

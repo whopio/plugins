@@ -3,9 +3,6 @@
 Read this before creating or launching ads. Enums and field lists live in each tool's
 own schema — do not invent them.
 
-`media_generate` and every money step here are consequential operations: read
-`whop-mcp-safety` first.
-
 Drafts can be created without billing. Launching (`status: "active"`) cannot.
 
 ## Setup
