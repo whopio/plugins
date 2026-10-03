@@ -1,6 +1,6 @@
-# Whop plugin for Grok Build
+# Whop plugin for {{DISPLAY_NAME}}
 
-The official Whop plugin connects Grok to your Whop business through the
+The official Whop plugin connects {{CLIENT_NAME}} to your Whop business through the
 hosted Whop MCP server (`https://mcp.whop.com/mcp`). Sign in with your Whop account in
 the browser — no API key is stored or read from your machine — and then ask in plain
 language to launch a website, create products and checkout links, manage payments,
@@ -9,8 +9,8 @@ bounties, or read your stats.
 
 ## Getting started
 
-1. Install the plugin and restart Grok.
-2. Run `/whop-connect`. The first Whop tool call opens your browser so you can sign
+1. Install the plugin and restart {{CLIENT_NAME}}.
+2. Run {{CONNECT_COMMAND}}. The first Whop tool call opens your browser so you can sign
    in to Whop and approve access.
 3. Describe what you want, for example "create a $20/month membership and give me the
    checkout link" or "show me last week's revenue".
@@ -33,4 +33,4 @@ only runs after you confirm it.
 - Privacy policy: https://whop.com/privacy
 - Source: https://github.com/whopio/plugins
 
-<!-- Generated from shared/README.md and clients/grok/ by ./scripts/build.sh — do not edit here. -->
+<!-- Generated from shared/README.md and clients/{{CLIENT_KEY}}/ by ./scripts/build.sh — do not edit here. -->
