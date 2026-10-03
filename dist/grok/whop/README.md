@@ -15,15 +15,11 @@ bounties, or read your stats.
 3. Describe what you want, for example "create a $20/month membership and give me the
    checkout link" or "show me last week's revenue".
 
-Anything that moves money, issues credentials, or deletes data is prepared first and
-only runs after you confirm it.
-
 ## What's included
 
 - **Whop MCP server** — the tools that act on your Whop account.
 - **`whop` skill** — maps each job to the right tools, with guides for websites, ads,
   and company formation.
-- **`whop-mcp-safety` skill** — the confirm-before-acting rules for changes.
 - **`whop-connect` command** — checks you are signed in and names the account it can
   reach.
 
