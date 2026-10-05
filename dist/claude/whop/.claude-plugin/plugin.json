@@ -18,5 +18,7 @@
     "memberships",
     "run ads"
   ],
-  "description": "Official Whop integration (MCP Server + Skills). Sign in with your Whop account to launch websites, create products and memberships with checkout links, accept payments and manage refunds, payouts, and disputes, run Meta and TikTok ads, form an LLC or C-corp, post bounties, and read stats directly in Claude Code. Run /whop:whop-connect to get started, then describe what you want in plain language."
+  "description": "Official Whop integration (MCP Server + Skills). Sign in with your Whop account to launch websites, create products and memberships with checkout links, accept payments and manage refunds, payouts, and disputes, run Meta and TikTok ads, form an LLC or C-corp, post bounties, and read stats directly in Claude Code. Run /whop:whop-connect to get started, then describe what you want in plain language.",
+  "icon": "./assets/icon.svg",
+  "privacyPolicyUrl": "https://whop.com/privacy"
 }

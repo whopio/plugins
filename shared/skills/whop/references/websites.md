@@ -36,9 +36,6 @@ is required to deploy source Whop already holds.
 - It returns the run it started. Follow progress on the app's `deployment` field via
   `apps_get`.
 
-This is a consequential operation — `confirmation: true` — so it goes through the
-prepare-and-confirm handshake. See `whop-mcp-safety`.
-
 ## Shipping code that only exists locally
 
 `apps_deploy` builds what Whop already has. To get new local code up, do the local

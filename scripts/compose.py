@@ -5,6 +5,8 @@ Layering, in order:
   2. clients/<c>/skills/     -> <out>/skills/   (adds, and overrides by skill name)
   3. shared/mcp.json         -> <out>/<mcpConfigPath>
   4. shared/plugin.base.json + clients/<c>/client.json:manifest -> <out>/<manifestPath>
+  5. shared/assets/          -> <out>/assets/
+  6. shared/README.md        -> <out>/README.md
 
 Every {{TOKEN}} in a copied Markdown or JSON file is replaced from
 client.json:tokens, plus CLIENT_KEY and PLUGIN_VERSION injected here.
@@ -49,6 +51,7 @@ def main() -> None:
     tokens = {
         "CLIENT_KEY": client,
         "PLUGIN_VERSION": base.get("version", "0.0.0"),
+        "DISPLAY_NAME": cfg["displayName"],
         **cfg.get("tokens", {}),
     }
 
@@ -75,11 +78,11 @@ def main() -> None:
         json.dump(ordered, f, indent=2, ensure_ascii=False)
         f.write("\n")
 
+    copy_tree(Path("shared/assets"), out / "assets", tokens)
+
+    readme_src = Path("shared/README.md")
     (out / "README.md").write_text(
-        f"# Whop plugin for {cfg['displayName']}\n\n"
-        "**Generated — do not edit.** Source lives in `shared/` and "
-        f"`clients/{client}/`; rebuild with `./scripts/build.sh {client}`.\n",
-        encoding="utf-8",
+        render(readme_src.read_text(), tokens, readme_src), encoding="utf-8"
     )
 
 

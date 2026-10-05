@@ -3,16 +3,10 @@
 The tool is `accounts_form_company`. Taxonomy values, state enums, and founder field
 lists live in its schema — do not invent them.
 
-This is a consequential operation: read `whop-mcp-safety` first. It goes through
-prepare-and-confirm and takes an idempotency key.
-
 It creates a **hosted checkout**. It does not charge and it does not file. Give the
 user the returned `checkout_url` so they review the total and pay. Filing starts
 after payment. Track progress on the account's `company_formation` field via
 `accounts_get`.
-
-C-corp is not covered by the LLC confirmation exception in `SKILL.md` — ask first.
-LLC requests matching that exception can be executed without asking again.
 
 ## Checkout
 

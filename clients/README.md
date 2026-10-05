@@ -18,7 +18,7 @@ this repo at a commit. They never run the build.
 | `description` | It names the client, and lands in that client's catalog. |
 | Two tokens | `{{CLIENT_NAME}}` and `{{CONNECT_COMMAND}}` in the `whop` skill. |
 
-The `whop` skill, `whop-mcp-safety`, the three playbooks, and the MCP
+The `whop` skill, the three playbooks, and the MCP
 config are the same across clients.
 
 ## Status

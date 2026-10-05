@@ -33,7 +33,6 @@ The first Whop tool call opens a browser for Whop sign-in.
 | --- | --- | --- |
 | MCP config | `shared/mcp.json` | Points the client at `https://mcp.whop.com/mcp`. You sign in through the browser. |
 | `whop` skill | `shared/skills/whop/` | Lists every command group and which tool starts each job, and adds guides for websites, ads, and company formation. |
-| `whop-mcp-safety` skill | `shared/skills/whop-mcp-safety/` | Rules for calls that change something. |
 | `whop-connect` command | `clients/<client>/skills/whop-connect/` | Checks you are signed in, then names the account and what it can reach. Written once per client, because each names its menus differently. |
 
 ## Repository layout
@@ -42,7 +41,7 @@ The first Whop tool call opens a browser for Whop sign-in.
 shared/                          Client-neutral content
   mcp.json                         MCP server config
   plugin.base.json                 Manifest fields common to every client
-  skills/                          whop, whop-mcp-safety (+ references)
+  skills/                          whop (+ references)
 clients/<client>/                Everything that differs per client
   client.json                      Manifest overrides, output paths, {{TOKEN}} values
   skills/                          Client-specific skills (overrides shared by name)
