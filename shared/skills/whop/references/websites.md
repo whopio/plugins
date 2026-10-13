@@ -31,8 +31,13 @@ is required to deploy source Whop already holds.
 - Only one deployment runs per app at a time. Calling it again while one is in flight
   reports that run rather than starting a second.
 - Calling it with nothing to publish says so rather than starting a run.
+{{#if claude}}
 - `draft: true` uploads the build without making it live. The default deploys and
   promotes in one step, so ask the user before a non-draft deploy.
+{{else}}
+- `draft: true` uploads the build without making it live. The default deploys and
+  promotes in one step.
+{{/if}}
 - It returns the run it started. Follow progress on the app's `deployment` field via
   `apps_get`.
 
@@ -46,7 +51,11 @@ half with your own tools and the rest over MCP:
    or a `.zip` of the hosted site.
 3. `app-builds_create` referencing the uploaded file — `attachment` takes `{ id }`
    for an existing file or `{ direct_upload_id }` for a completed direct upload.
+{{#if claude}}
 4. Ask the user, then `app-builds_promote` to make that build live.
+{{else}}
+4. `app-builds_promote` to make that build live.
+{{/if}}
 
 Promoting an older build rolls back to it.
 

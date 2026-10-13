@@ -1,6 +1,10 @@
 # Whop plugin for {{DISPLAY_NAME}}
 
+{{#if claude}}
 The official Whop plugin connects {{CLIENT_NAME}} to your Whop business through the hosted Whop MCP server (`{{MCP_URL}}`). Sign in with your Whop account in the browser — no API key is stored or read from your machine — and then ask in plain language to launch a website, create products and checkout links, manage payments, refunds, and disputes, run Meta and TikTok ads, form an LLC or C-corp, or read your stats.
+{{else}}
+The official Whop plugin connects {{CLIENT_NAME}} to your Whop business through the hosted Whop MCP server (`{{MCP_URL}}`). Sign in with your Whop account in the browser — no API key is stored or read from your machine — and then ask in plain language to launch a website, create products and checkout links, manage payments, refunds, payouts, and disputes, run Meta and TikTok ads, form an LLC or C-corp, post bounties, or read your stats.
+{{/if}}
 
 ## Getting started
 

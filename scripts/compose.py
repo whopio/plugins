@@ -11,6 +11,14 @@ Layering, in order:
 Every {{TOKEN}} in a copied Markdown or JSON file is replaced from
 client.json:tokens, plus CLIENT_KEY and PLUGIN_VERSION injected here.
 An unresolved token is a hard error: a client that forgets one must not ship.
+
+Markdown may also hold per-client blocks, each marker on its own line:
+
+  {{#if claude}}      kept only for the named client(s), comma-separated
+  {{else}}            optional: kept for every other client
+  {{/if}}
+
+Blocks do not nest. An unclosed or stray marker is a hard error.
 """
 
 import json
@@ -20,6 +28,31 @@ import sys
 from pathlib import Path
 
 TOKEN_RE = re.compile(r"\{\{([A-Z0-9_]+)\}\}")
+IF_RE = re.compile(r"^\{\{#if ([a-z0-9_,]+)\}\}$")
+
+
+def select_blocks(text: str, client: str, where: Path) -> str:
+    out, state = [], None  # state: None, or True/False = keep current branch
+    for n, line in enumerate(text.splitlines(keepends=True), 1):
+        marker = line.strip()
+        m = IF_RE.match(marker)
+        if m:
+            if state is not None:
+                raise SystemExit(f"error: {where}:{n}: nested {{{{#if}}}}")
+            state = client in m.group(1).split(",")
+        elif marker == "{{else}}":
+            if state is None:
+                raise SystemExit(f"error: {where}:{n}: {{{{else}}}} outside a block")
+            state = not state
+        elif marker == "{{/if}}":
+            if state is None:
+                raise SystemExit(f"error: {where}:{n}: stray {{{{/if}}}}")
+            state = None
+        elif state is not False:
+            out.append(line)
+    if state is not None:
+        raise SystemExit(f"error: {where}: unclosed {{{{#if}}}}")
+    return "".join(out)
 
 
 def render(text: str, tokens: dict, where: Path) -> str:
@@ -32,6 +65,13 @@ def render(text: str, tokens: dict, where: Path) -> str:
     return TOKEN_RE.sub(sub, text)
 
 
+def render_file(path: Path, tokens: dict) -> str:
+    text = path.read_text()
+    if path.suffix.lower() == ".md":
+        text = select_blocks(text, tokens["CLIENT_KEY"], path)
+    return render(text, tokens, path)
+
+
 def copy_tree(src: Path, dst: Path, tokens: dict) -> None:
     for path in sorted(src.rglob("*")):
         if not path.is_file():
@@ -39,7 +79,7 @@ def copy_tree(src: Path, dst: Path, tokens: dict) -> None:
         target = dst / path.relative_to(src)
         target.parent.mkdir(parents=True, exist_ok=True)
         if path.suffix.lower() in (".md", ".json"):
-            target.write_text(render(path.read_text(), tokens, path), encoding="utf-8")
+            target.write_text(render_file(path, tokens), encoding="utf-8")
         else:
             shutil.copy2(path, target)
 
@@ -81,9 +121,7 @@ def main() -> None:
     copy_tree(Path("shared/assets"), out / "assets", tokens)
 
     readme_src = Path("shared/README.md")
-    (out / "README.md").write_text(
-        render(readme_src.read_text(), tokens, readme_src), encoding="utf-8"
-    )
+    (out / "README.md").write_text(render_file(readme_src, tokens), encoding="utf-8")
 
 
 if __name__ == "__main__":
