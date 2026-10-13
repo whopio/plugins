@@ -1,6 +1,6 @@
 ---
 name: whop
-description: "Work with the user's Whop business through the Whop MCP tools: websites on *.whop.app, products, checkout links, payments, refunds, disputes, memberships, ads, LLC/C-corp formation, and stats. Use when the user mentions Whop or whop.com, or asks about something that lives in their Whop account (a Whop store, membership, checkout link, or Whop ads campaign). Not for the internal `whopdev` local-dev CLI."
+description: "Work with the user's Whop business through the Whop MCP tools: websites on *.whop.app, products, checkout links, payments, refunds, disputes, memberships, ads, LLC/C-corp formation, and stats. Use when the user mentions Whop or whop.com, or asks about something that lives in their Whop account (a Whop store, membership, checkout link, or Whop ads campaign)."
 ---
 
 # Whop

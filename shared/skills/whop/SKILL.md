@@ -1,9 +1,9 @@
 ---
 name: whop
 {{#if claude}}
-description: "Work with the user's Whop business through the Whop MCP tools: websites on *.whop.app, products, checkout links, payments, refunds, disputes, memberships, ads, LLC/C-corp formation, and stats. Use when the user mentions Whop or whop.com, or asks about something that lives in their Whop account (a Whop store, membership, checkout link, or Whop ads campaign). Not for the internal `whopdev` local-dev CLI."
+description: "Work with the user's Whop business through the Whop MCP tools: websites on *.whop.app, products, checkout links, payments, refunds, disputes, memberships, ads, LLC/C-corp formation, and stats. Use when the user mentions Whop or whop.com, or asks about something that lives in their Whop account (a Whop store, membership, checkout link, or Whop ads campaign)."
 {{else}}
-description: "Run a business on Whop: websites on *.whop.app, products, checkout, payments, payouts, memberships, ads, LLC/C-corp formation, bounties, and stats. Use when the user mentions Whop, whop.com, their store, a membership or product, checkout links, payouts or transfers, Meta/TikTok ads, forming a company, or anything the Whop MCP tools provide. Not for the internal `whopdev` local-dev CLI."
+description: "Run a business on Whop: websites on *.whop.app, products, checkout, payments, payouts, memberships, ads, LLC/C-corp formation, bounties, and stats. Use when the user mentions Whop, whop.com, their store, a membership or product, checkout links, payouts or transfers, Meta/TikTok ads, forming a company, or anything the Whop MCP tools provide."
 {{/if}}
 ---
 
