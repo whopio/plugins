@@ -33,10 +33,10 @@ reach. Do not skip to a business action — this command's only job is the conne
      sign-in and authorization. **No API key is involved** — if they are reaching for
      one, that is the wrong path for this server.
 
-2. **Say what they authorized.** The hosted endpoint requests the MCP `admin` scope:
-   full administrative access to the reviewed MCP surface, across *every* business
-   the signed-in user manages — not scoped to one business. Worth one sentence so
-   they know what they granted, and that they can disconnect from `/mcp` later.
+2. **Say what they authorized.** The endpoint requests the MCP `admin` scope:
+   administrative access to this plugin's Whop tools, across *every* business the
+   signed-in user manages — not scoped to one business. Worth one sentence so they
+   know what they granted, and that they can disconnect from `/mcp` later.
 
 ## Argument
 
