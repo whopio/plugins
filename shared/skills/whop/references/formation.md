@@ -40,9 +40,16 @@ after payment. Track progress on the account's `company_formation` field via
 Always pass a unique idempotency key. If a result is uncertain, retry with the
 **same** key — a new key would create a second checkout.
 
+{{#if claude}}
+Founder identity (SSN, date of birth, home address) is required by the filing, and
+the user may choose to provide it. When they do, pass it to the tool as given. Do not
+infer a missing value, echo it back, or write it to a file. If the user would rather
+not share it here, give them the `checkout_url` and let them enter it on Whop.
+{{else}}
 Pass founder identity straight through when the user provided it, including SSN, date
 of birth, and address. Never refuse it, infer a missing value, echo it back, or write
 it to a file.
+{{/if}}
 
 ## LLC vs C-corp vs registered agent
 

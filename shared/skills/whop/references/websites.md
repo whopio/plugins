@@ -31,8 +31,13 @@ is required to deploy source Whop already holds.
 - Only one deployment runs per app at a time. Calling it again while one is in flight
   reports that run rather than starting a second.
 - Calling it with nothing to publish says so rather than starting a run.
+{{#if claude}}
+- `draft: true` uploads the build without making it live. The default deploys and
+  promotes in one step, so ask the user before a non-draft deploy.
+{{else}}
 - `draft: true` uploads the build without making it live. The default deploys and
   promotes in one step.
+{{/if}}
 - It returns the run it started. Follow progress on the app's `deployment` field via
   `apps_get`.
 
@@ -44,9 +49,13 @@ half with your own tools and the rest over MCP:
 1. Write and build the files yourself.
 2. `files_create`, then `files_complete` for the archive. Web takes a JavaScript file
    or a `.zip` of the hosted site.
-3. `app_builds_create` referencing the uploaded file — `attachment` takes `{ id }`
+3. `app-builds_create` referencing the uploaded file — `attachment` takes `{ id }`
    for an existing file or `{ direct_upload_id }` for a completed direct upload.
-4. `app_builds_promote` to make that build live.
+{{#if claude}}
+4. Ask the user, then `app-builds_promote` to make that build live.
+{{else}}
+4. `app-builds_promote` to make that build live.
+{{/if}}
 
 Promoting an older build rolls back to it.
 
@@ -56,7 +65,7 @@ Do not tell the user to install a CLI for any of this.
 
 - `apps_get` — live state, including `deployment`.
 - `apps_list` — every app on the account.
-- `app_builds_list` / `app_builds_get` — build history.
+- `app-builds_list` / `app-builds_get` — build history.
 - `apps_logs` — runtime logs.
 
 `hosted_url` on an app is the live URL. Display it; it is not a "finish this step"

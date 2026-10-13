@@ -2,7 +2,7 @@
   "$schema": "https://www.schemastore.org/claude-code-plugin-manifest.json",
   "name": "whop",
   "displayName": "Whop",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "Whop",
     "url": "https://whop.com"
@@ -18,7 +18,7 @@
     "memberships",
     "run ads"
   ],
-  "description": "Official Whop integration (MCP Server + Skills). Sign in with your Whop account to launch websites, create products and memberships with checkout links, accept payments and manage refunds, payouts, and disputes, run Meta and TikTok ads, form an LLC or C-corp, post bounties, and read stats directly in Claude Code. Run /whop:whop-connect to get started, then describe what you want in plain language.",
+  "description": "Official Whop integration (MCP Server + Skills). Sign in with your Whop account to launch websites, create products and memberships with checkout links, accept payments and manage refunds and disputes, run Meta and TikTok ads from your own images, form an LLC or C-corp, and read stats directly in Claude Code. Run /whop:whop-connect to get started, then describe what you want in plain language.",
   "icon": "./assets/icon.svg",
   "privacyPolicyUrl": "https://whop.com/privacy"
 }

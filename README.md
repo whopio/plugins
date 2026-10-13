@@ -31,7 +31,7 @@ The first Whop tool call opens a browser for Whop sign-in.
 
 | Component | Source | What it does |
 | --- | --- | --- |
-| MCP config | `shared/mcp.json` | Points the client at `https://mcp.whop.com/mcp`. You sign in through the browser. |
+| MCP config | `shared/mcp.json` | Points the client at its Whop MCP endpoint (`MCP_URL` in `clients/<client>/client.json`). Claude uses `https://mcp.whop.com/claude/mcp`, which leaves out AI media generation and money-out tools. You sign in through the browser. |
 | `whop` skill | `shared/skills/whop/` | Lists every command group and which tool starts each job, and adds guides for websites, ads, and company formation. |
 | `whop-connect` command | `clients/<client>/skills/whop-connect/` | Checks you are signed in, then names the account and what it can reach. Written once per client, because each names its menus differently. |
 

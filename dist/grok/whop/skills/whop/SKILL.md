@@ -1,6 +1,6 @@
 ---
 name: whop
-description: "Run a business on Whop: websites on *.whop.app, products, checkout, payments, payouts, memberships, ads, LLC/C-corp formation, bounties, and stats. Use when the user mentions Whop, whop.com, their store, a membership or product, checkout links, payouts or transfers, Meta/TikTok ads, forming a company, or anything the Whop MCP tools provide. Not for the internal `whopdev` local-dev CLI."
+description: "Run a business on Whop: websites on *.whop.app, products, checkout, payments, payouts, memberships, ads, LLC/C-corp formation, bounties, and stats. Use when the user mentions Whop, whop.com, their store, a membership or product, checkout links, payouts or transfers, Meta/TikTok ads, forming a company, or anything the Whop MCP tools provide."
 ---
 
 # Whop
@@ -15,10 +15,10 @@ prefer, and no CLI to install.
    identity, the selected account, granted scopes, and tool coverage. If it fails or
    the plugin's tools are missing, the user has not completed OAuth — tell them to
    run `/whop-connect`.
-2. **Discover, do not guess.** Tool names follow `<group>_<operation>`
-   (`payments_list`, `products_create`). Read the tool's own schema before calling
-   it. Never invent a tool name, a field, or an enum value — if you cannot find it,
-   say so and ask.
+2. **Discover, do not guess.** Tool names follow `<group>_<operation>`, with
+   hyphens inside multi-word groups (`payments_list`, `ad-campaigns_update`). Read
+   the tool's own schema before calling it. Never invent a tool name, a field, or an
+   enum value — if you cannot find it, say so and ask.
 3. **Know the account.** `connection_status` returns `account_id`, and it is often
    **null** — a user grant is not bound to one business. When it is null, nothing is
    selected for you: get the id from `accounts_list` and pass `account_id` (`biz_…`)
@@ -30,14 +30,14 @@ prefer, and no CLI to install.
 | --- | --- | --- |
 | Check who I am / what I can do | `connection_status` | — |
 | Ship a website on `*.whop.app` | `apps_create`, then `apps_deploy` | [references/websites.md](references/websites.md) |
-| Sell something | `products_*`, `plans_*`, `checkout_configurations_*` | — |
+| Sell something | `products_*`, `plans_*`, `checkout-configurations_*` | — |
 | Customers and access | `members_*`, `memberships_*` | — |
 | Take and manage money | `payments_*`, `payouts_*`, `transfers_*`, `deposits_*`, `cards_*`, `disputes_*` | — |
-| Run ads | `media_generate`, `ads_*`, `ad_campaigns_*`, `ad_groups_*` | [references/ads.md](references/ads.md) |
+| Run ads | `media_generate`, `ads_*`, `ad-campaigns_*`, `ad-groups_*` | [references/ads.md](references/ads.md) |
 | Form an LLC or C-corp | `accounts_form_company` | [references/formation.md](references/formation.md) |
-| Hire | `bounties_*`, `bounty_submissions_*` | — |
+| Hire | `bounties_*`, `bounty-submissions_*` | — |
 | Measure | `stats_*`, `exports_*`, `events_*`, `people_*` | — |
-| Developer surface | `apps_*`, `app_builds_*`, `api_keys_*`, `webhooks_*` | — |
+| Developer surface | `apps_*`, `app-builds_*`, `api-keys_*`, `webhooks_*` | — |
 
 The table is a router, not a schema. Read the playbook before websites, ads, or
 formation — each has ordering traps that a tool description alone does not teach.
@@ -52,8 +52,8 @@ making it live.
 
 To ship code that only exists on this machine, do the local half yourself and the
 rest over MCP: write and build the files with your own tools, upload the artifact
-with `files_create` / `files_complete`, register it with `app_builds_create`, then
-`app_builds_promote`. Do not tell the user to install a CLI for this.
+with `files_create` / `files_complete`, register it with `app-builds_create`, then
+`app-builds_promote`. Do not tell the user to install a CLI for this.
 
 ## Working agreement
 

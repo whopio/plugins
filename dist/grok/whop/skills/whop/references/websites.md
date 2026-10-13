@@ -44,9 +44,9 @@ half with your own tools and the rest over MCP:
 1. Write and build the files yourself.
 2. `files_create`, then `files_complete` for the archive. Web takes a JavaScript file
    or a `.zip` of the hosted site.
-3. `app_builds_create` referencing the uploaded file — `attachment` takes `{ id }`
+3. `app-builds_create` referencing the uploaded file — `attachment` takes `{ id }`
    for an existing file or `{ direct_upload_id }` for a completed direct upload.
-4. `app_builds_promote` to make that build live.
+4. `app-builds_promote` to make that build live.
 
 Promoting an older build rolls back to it.
 
@@ -56,7 +56,7 @@ Do not tell the user to install a CLI for any of this.
 
 - `apps_get` — live state, including `deployment`.
 - `apps_list` — every app on the account.
-- `app_builds_list` / `app_builds_get` — build history.
+- `app-builds_list` / `app-builds_get` — build history.
 - `apps_logs` — runtime logs.
 
 `hosted_url` on an app is the live URL. Display it; it is not a "finish this step"
