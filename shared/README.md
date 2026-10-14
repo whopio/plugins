@@ -8,7 +8,11 @@ The official Whop plugin connects {{CLIENT_NAME}} to your Whop business through 
 
 ## Getting started
 
+{{#if claude}}
+1. Install the plugin with `/plugin install whop --marketplace whopio/plugins`, then restart {{CLIENT_NAME}}.
+{{else}}
 1. Install the plugin and restart {{CLIENT_NAME}}.
+{{/if}}
 2. Run {{CONNECT_COMMAND}}. The first Whop tool call opens your browser so you can sign in to Whop and approve access.
 3. Describe what you want, for example "create a $20/month membership and give me the checkout link" or "show me last week's revenue".
 
