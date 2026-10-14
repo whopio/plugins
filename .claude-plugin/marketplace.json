@@ -7,18 +7,18 @@
   },
   "metadata": {
     "description": "Official Whop plugins for Claude Code.",
-    "version": "1.1.1"
+    "version": "1.1.2"
   },
   "plugins": [
     {
       "name": "whop",
       "source": "./dist/claude/whop",
       "description": "Official Whop integration (MCP Server + Skills). Sign in with your Whop account to launch websites, create products and memberships with checkout links, accept payments and manage refunds and disputes, run Meta and TikTok ads from your own images, form an LLC or C-corp, and read stats directly in Claude Code. Run /whop:whop-connect to get started, then describe what you want in plain language.",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "author": {
         "name": "Whop"
       },
-      "homepage": "https://docs.whop.com/",
+      "homepage": "https://docs.whop.com/developer/guides/plugins/claude-code",
       "license": "Apache-2.0",
       "keywords": [
         "whop",

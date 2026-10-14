@@ -4,7 +4,7 @@
       "type": "http",
       "url": "https://mcp.whop.com/mcp",
       "headers": {
-        "X-Whop-Plugin": "grok/1.1.1"
+        "X-Whop-Plugin": "grok/1.1.2"
       }
     }
   }

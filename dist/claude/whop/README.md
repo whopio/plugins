@@ -4,7 +4,7 @@ The official Whop plugin connects Claude to your Whop business through the hoste
 
 ## Getting started
 
-1. Install the plugin and restart Claude.
+1. Install the plugin with `/plugin install whop --marketplace whopio/plugins`, then restart Claude.
 2. Run `/whop:whop-connect`. The first Whop tool call opens your browser so you can sign in to Whop and approve access.
 3. Describe what you want, for example "create a $20/month membership and give me the checkout link" or "show me last week's revenue".
 
