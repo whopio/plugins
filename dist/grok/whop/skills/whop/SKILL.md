@@ -1,6 +1,6 @@
 ---
 name: whop
-description: "Run a business on Whop: websites on *.whop.app, products, checkout, payments, payouts, memberships, ads, LLC/C-corp formation, bounties, and stats. Use when the user mentions Whop, whop.com, their store, a membership or product, checkout links, payouts or transfers, Meta/TikTok ads, forming a company, or anything the Whop MCP tools provide."
+description: "Run a business on Whop: websites on *.whop.site, products, checkout, payments, payouts, memberships, ads, LLC/C-corp formation, bounties, and stats. Use when the user mentions Whop, whop.com, their store, a membership or product, checkout links, payouts or transfers, Meta/TikTok ads, forming a company, or anything the Whop MCP tools provide."
 ---
 
 # Whop
@@ -22,25 +22,36 @@ prefer, and no CLI to install.
 3. **Know the account.** `connection_status` returns `account_id`, and it is often
    **null** — a user grant is not bound to one business. When it is null, nothing is
    selected for you: get the id from `accounts_list` and pass `account_id` (`biz_…`)
-   explicitly on account-scoped calls. Never assume a default business.
+   explicitly on account-scoped calls. Never assume a default business. Pass it on
+   list calls too: `products_list` without `account_id` searches the public Whop
+   marketplace, not the user's store.
 
 ## What to run
 
 | Job | Start here | Playbook |
 | --- | --- | --- |
 | Check who I am / what I can do | `connection_status` | — |
-| Ship a website on `*.whop.app` | `apps_create`, then `apps_deploy` | [references/websites.md](references/websites.md) |
-| Sell something | `products_*`, `plans_*`, `checkout-configurations_*` | — |
+| Ship a website on `*.whop.site` | `apps_create`, then `apps_deploy` | [references/websites.md](references/websites.md) |
+| Sell something | `products_*`, `variants_*`, `checkout-configurations_*` | — |
 | Customers and access | `members_*`, `memberships_*` | — |
 | Take and manage money | `payments_*`, `payouts_*`, `transfers_*`, `deposits_*`, `cards_*`, `disputes_*` | — |
 | Run ads | `media_generate`, `ads_*`, `ad-campaigns_*`, `ad-groups_*` | [references/ads.md](references/ads.md) |
 | Form an LLC or C-corp | `accounts_form_company` | [references/formation.md](references/formation.md) |
 | Hire | `bounties_*`, `bounty-submissions_*` | — |
 | Measure | `stats_*`, `exports_*`, `events_*`, `people_*` | — |
-| Developer surface | `apps_*`, `app-builds_*`, `api-keys_*`, `webhooks_*` | — |
+| Developer surface | `apps_*`, `app-builds_*` | — |
 
 The table is a router, not a schema. Read the playbook before websites, ads, or
 formation — each has ordering traps that a tool description alone does not teach.
+
+Variants are a product's prices and billing options; older docs call them plans.
+Use `variants_*`. `checkout-configurations_create` takes a variant's id (`plan_id`
+or `variant_id`, whichever its schema lists) or an inline variant (`plan` or
+`variant`).
+
+`payments_list` has no failed or refunded `status` filter. To find failed or
+refunded payments, list the date range and read each payment's `substatus`
+(`failed`, `refunded`, `partially_refunded`, and so on).
 
 ## Working with app source
 
@@ -52,17 +63,22 @@ making it live.
 
 To ship code that only exists on this machine, do the local half yourself and the
 rest over MCP: write and build the files with your own tools, upload the artifact
-with `files_create` / `files_complete`, register it with `app-builds_create`, then
-`app-builds_promote`. Do not tell the user to install a CLI for this.
+(`files_create`, PUT the bytes to its `upload_url` with its `upload_headers`, then
+poll `files_get` until `upload_status` is `ready`), register it with
+`app-builds_create`, then `app-builds_promote`. Do not tell the user to install a
+CLI for this.
 
 ## Working agreement
 
 - **Action links are for the user, not for you.** When a response carries
-  `authorize_url`, `session_url`, `deposit_url`, or `checkout_url`, give the link to
-  the user and say what they need to finish there. Do not fetch or curl it to
-  "verify" — that does not complete the flow and can consume a single-use URL.
-  Re-run the matching `get`/`list` afterwards to confirm the outcome.
-- `hosted_url` is not an action link. For an app it is the live app URL — display it.
+  `authorize_url`, `session_url`, `deposit_url`, `checkout_url`, or `purchase_url`,
+  give the link to the user and say what they need to finish there. Do not fetch or
+  curl it to "verify" — that does not complete the flow and can consume a single-use
+  URL. Re-run the matching `get`/`list` afterwards to confirm the outcome.
+- `hosted_url` is not an action link. On an app it is deprecated and can be null:
+  the app's addresses are in its `domains`. A `ready` one is live. For any other
+  status, check `website.state` (or `platform.state`) on `domains_get` before
+  saying it is down.
 - **Never echo secrets.** API keys, access tokens, and founder identity data (SSN,
   date of birth, home address) are legitimate inputs to the flows that need them.
   Pass them straight through to the tool. Never repeat them back in your response,

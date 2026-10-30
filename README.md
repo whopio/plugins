@@ -1,10 +1,12 @@
 # Whop plugins
 
-Official Whop plugin for whatever AI agent you use. Works with Claude Code and Grok Build.
+Official Whop plugin for whatever AI agent you use. Works with Claude (the Claude app, Cowork, and Claude Code) and Grok Build.
 
 ## Install
 
-**Claude Code**
+**Claude**
+
+In the Claude app, add Whop from the plugin directory. In Claude Code:
 
 ```
 /plugin marketplace add whopio/plugins
@@ -24,14 +26,14 @@ The first Whop tool call opens a browser for Whop sign-in.
 
 | Client | Status | Catalog entry |
 | --- | --- | --- |
-| Claude Code | Shipped (application pending) | `.claude-plugin/marketplace.json` |
+| Claude | Shipped (directory review pending) | `.claude-plugin/marketplace.json` |
 | Grok Build | PR pending | [`clients/grok/`](clients/grok/) |
 
 ## What the Whop plugin is
 
 | Component | Source | What it does |
 | --- | --- | --- |
-| MCP config | `shared/mcp.json` | Points the client at its Whop MCP endpoint (`MCP_URL` in `clients/<client>/client.json`). Claude uses `https://mcp.whop.com/claude/mcp`, which leaves out AI media generation and money-out tools. You sign in through the browser. |
+| MCP config | `shared/mcp.json` (Claude: `clients/claude/mcp.json`) | Points the client at its Whop MCP endpoint (`MCP_URL` in `clients/<client>/client.json`). Claude uses `https://mcp.whop.com/claude/mcp`, which leaves out AI media generation and money-out tools, and sends no extra headers. You sign in through the browser. |
 | `whop` skill | `shared/skills/whop/` | Lists every command group and which tool starts each job, and adds guides for websites, ads, and company formation. |
 | `whop-connect` command | `clients/<client>/skills/whop-connect/` | Checks you are signed in, then names the account and what it can reach. Written once per client, because each names its menus differently. |
 
@@ -44,6 +46,7 @@ shared/                          Client-neutral content
   skills/                          whop (+ references)
 clients/<client>/                Everything that differs per client
   client.json                      Manifest overrides, output paths, {{TOKEN}} values
+  mcp.json                         Optional MCP config template (mcpTemplate)
   skills/                          Client-specific skills (overrides shared by name)
 dist/<client>/whop/              AUTO-GENERATED
 .claude-plugin/marketplace.json   Claude marketplace, sources ./dist/claude/whop

@@ -1,11 +1,11 @@
-# Whop plugin for Claude Code
+# Whop plugin for Claude
 
-The official Whop plugin connects Claude to your Whop business through the hosted Whop MCP server (`https://mcp.whop.com/claude/mcp`). Sign in with your Whop account in the browser — no API key is stored or read from your machine — and then ask in plain language to launch a website, create products and checkout links, manage payments, refunds, and disputes, run Meta and TikTok ads, form an LLC or C-corp, or read your stats.
+The official Whop plugin connects Claude to your Whop business through the hosted Whop MCP server (`https://mcp.whop.com/claude/mcp`). Sign in with your Whop account in the browser — no API key is stored or read from your machine — and then ask in plain language to launch a website, create products and checkout links, manage payments, refunds, and disputes, run ads from your own images, form an LLC or C-corp, or read your stats.
 
 ## Getting started
 
-1. Install the plugin with `/plugin install whop --marketplace whopio/plugins`, then restart Claude.
-2. Run `/whop:whop-connect`. The first Whop tool call opens your browser so you can sign in to Whop and approve access.
+1. Install the plugin. In the Claude app, add Whop from the plugin directory. In Claude Code, run `/plugin marketplace add whopio/plugins`, then `/plugin install whop@whop`, and restart Claude Code.
+2. Connect Whop: on the plugin's Connectors tab in the Claude app, or with `/whop:whop-connect` in Claude Code. Your browser opens so you can sign in to Whop and approve access.
 3. Describe what you want, for example "create a $20/month membership and give me the checkout link" or "show me last week's revenue".
 
 ## What's included

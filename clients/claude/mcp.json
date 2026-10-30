@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "whop": {
+      "type": "http",
+      "url": "{{MCP_URL}}"
+    }
+  }
+}

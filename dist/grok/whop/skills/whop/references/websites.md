@@ -1,4 +1,4 @@
-# Websites and apps (`*.whop.app`)
+# Websites and apps (`*.whop.site`)
 
 Read this before creating or deploying an app. Field lists and enums live in each
 tool's own schema — do not invent them.
@@ -11,9 +11,9 @@ site:
 | Field | Notes |
 | --- | --- |
 | `name` | Required. Shown to users on the app store. |
-| `app_type` | `website` (visitors browse `<route>.whop.app`), `b2c_app` (creators install it), plus `b2b_app`, `company_app`, `component`. Ask; do not guess. |
-| `route` | The subdomain the hosted build is served from. A hosted app with no route cannot go live. |
-| `account_id` | `biz_` tag. Defaults to the account behind the credential. |
+| `app_type` | `website` (visitors browse `<route>.whop.site`), `b2c_app` (creators install it), plus `b2b_app`, `company_app`, `component`. Ask; do not guess. |
+| `route` | The whop.site subdomain (`myapp` serves at `myapp.whop.site`). Deprecated in the schema but still accepted. Without it or a `domain_id`, the app has no address. |
+| `account_id` | `biz_` tag. Optional in the schema, but always pass the business id from `accounts_list`. Never rely on a default. |
 | `base_url` | Only for an app you host yourself elsewhere. |
 
 Ask which `app_type` before creating. The choice shapes how the app is surfaced, and
@@ -42,8 +42,10 @@ is required to deploy source Whop already holds.
 half with your own tools and the rest over MCP:
 
 1. Write and build the files yourself.
-2. `files_create`, then `files_complete` for the archive. Web takes a JavaScript file
-   or a `.zip` of the hosted site.
+2. Upload the archive: `files_create`, PUT the bytes to the returned `upload_url`
+   with its `upload_headers`, then poll `files_get` until `upload_status` is
+   `ready`. `files_complete` is only for multipart uploads. Web takes a JavaScript
+   file or a `.zip` of the hosted site.
 3. `app-builds_create` referencing the uploaded file — `attachment` takes `{ id }`
    for an existing file or `{ direct_upload_id }` for a completed direct upload.
 4. `app-builds_promote` to make that build live.
@@ -55,9 +57,15 @@ Do not tell the user to install a CLI for any of this.
 ## Reading state
 
 - `apps_get` — live state, including `deployment`.
-- `apps_list` — every app on the account.
+- `apps_list` with `account_id` — the account's apps (without it, the public app
+  store). It leaves out websites unless you pass `app_type: "website"`, so to list
+  everything, call it both ways.
 - `app-builds_list` / `app-builds_get` — build history.
 - `apps_logs` — runtime logs.
 
-`hosted_url` on an app is the live URL. Display it; it is not a "finish this step"
-action link.
+An app's addresses are in `domains` on `apps_get`: its whop.site address and any
+custom domain. Each `status` sums up everything on that domain, such as the pixel,
+Apple Pay, and renewal. `ready` means live; show it as `https://<domain>`. Another
+status doesn't always mean the site is down: check `website.state` (or
+`platform.state` for a whop.site address) on `domains_get`. `hosted_url` is
+deprecated and can be null. None of these are action links.

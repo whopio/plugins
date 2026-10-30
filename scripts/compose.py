@@ -3,10 +3,13 @@
 Layering, in order:
   1. shared/skills/          -> <out>/skills/
   2. clients/<c>/skills/     -> <out>/skills/   (adds, and overrides by skill name)
-  3. shared/mcp.json         -> <out>/<mcpConfigPath>
+  3. shared/mcp.json         -> <out>/<mcpConfigPath>   (or client.json:mcpTemplate)
   4. shared/plugin.base.json + clients/<c>/client.json:manifest -> <out>/<manifestPath>
   5. shared/assets/          -> <out>/assets/
   6. shared/README.md        -> <out>/README.md
+
+Optional client.json key:
+  mcpTemplate       MCP config template to render instead of shared/mcp.json
 
 Every {{TOKEN}} in a copied Markdown or JSON file is replaced from
 client.json:tokens, plus CLIENT_KEY and PLUGIN_VERSION injected here.
@@ -19,6 +22,9 @@ Markdown may also hold per-client blocks, each marker on its own line:
   {{/if}}
 
 Blocks do not nest. An unclosed or stray marker is a hard error.
+
+Sources are read as UTF-8 on every platform, so a Windows build has the same content
+as a macOS one.
 """
 
 import json
@@ -66,7 +72,7 @@ def render(text: str, tokens: dict, where: Path) -> str:
 
 
 def render_file(path: Path, tokens: dict) -> str:
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     if path.suffix.lower() == ".md":
         text = select_blocks(text, tokens["CLIENT_KEY"], path)
     return render(text, tokens, path)
@@ -86,8 +92,8 @@ def copy_tree(src: Path, dst: Path, tokens: dict) -> None:
 
 def main() -> None:
     client, out = sys.argv[1], Path(sys.argv[2])
-    cfg = json.loads(Path(f"clients/{client}/client.json").read_text())
-    base = json.loads(Path("shared/plugin.base.json").read_text())
+    cfg = json.loads(Path(f"clients/{client}/client.json").read_text(encoding="utf-8"))
+    base = json.loads(Path("shared/plugin.base.json").read_text(encoding="utf-8"))
     tokens = {
         "CLIENT_KEY": client,
         "PLUGIN_VERSION": base.get("version", "0.0.0"),
@@ -101,10 +107,10 @@ def main() -> None:
     if client_skills.is_dir():
         copy_tree(client_skills, out / "skills", tokens)
 
-    mcp_src = Path("shared/mcp.json")
+    mcp_src = Path(cfg.get("mcpTemplate", "shared/mcp.json"))
     mcp_dst = out / cfg["mcpConfigPath"]
     mcp_dst.parent.mkdir(parents=True, exist_ok=True)
-    mcp_dst.write_text(render(mcp_src.read_text(), tokens, mcp_src), encoding="utf-8")
+    mcp_dst.write_text(render(mcp_src.read_text(encoding="utf-8"), tokens, mcp_src), encoding="utf-8")
 
     manifest = dict(base)
     manifest.update(cfg.get("manifest", {}))

@@ -24,19 +24,22 @@ reach. Do not skip to a business action — this command's only job is the conne
 
      Do not invent an account, and do not report a null account as if it were one.
      Then stop and ask what they want to do.
-   - **The tool is missing entirely** → the MCP server has not loaded. Tell the user
-     to run `/plugin` and confirm the `whop` plugin is enabled, then `/mcp` to check
-     the `whop` server's state. A restart of Claude Code picks up a newly installed
-     plugin.
-   - **It returns unauthenticated** → the OAuth flow has not completed. Tell them to
-     run `/mcp`, select `whop`, and authenticate. The browser opens to Whop for
-     sign-in and authorization. **No API key is involved** — if they are reaching for
-     one, that is the wrong path for this server.
+   - **The tool is missing entirely** → the MCP server has not loaded. In Claude
+     Code, tell the user to run `/plugin` and confirm the `whop` plugin is enabled,
+     then `/mcp` to check the `whop` server's state; a restart of Claude Code picks
+     up a newly installed plugin. In the Claude app, tell them to check that the
+     Whop plugin is installed and enabled, then connect Whop on its Connectors tab.
+   - **It returns unauthenticated** → the OAuth flow has not completed. In Claude
+     Code, tell them to run `/mcp`, select `whop`, and authenticate. In the Claude
+     app, they connect Whop on the plugin's Connectors tab. Either way the browser
+     opens to Whop for sign-in and authorization. **No API key is involved** — if
+     they are reaching for one, that is the wrong path for this server.
 
 2. **Say what they authorized.** The endpoint requests the MCP `admin` scope:
    administrative access to this plugin's Whop tools, across *every* business the
    signed-in user manages — not scoped to one business. Worth one sentence so they
-   know what they granted, and that they can disconnect from `/mcp` later.
+   know what they granted, and that they can disconnect later (`/mcp` in Claude
+   Code, or the plugin's Connectors tab in the Claude app).
 
 ## Argument
 
