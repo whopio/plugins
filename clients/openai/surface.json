@@ -1,0 +1,495 @@
+{
+  "_about": [
+    "Tool surface of https://mcp.whop.com/chatgpt/mcp, used by scripts/check_openai_plugin.py --surface.",
+    "Generated from the /chatgpt/mcp route's tools/list on its feature branch, 2026-11-05. The route is not live on mcp.whop.com yet.",
+    "Refresh from the live tools/list once the route ships: every tool name, grouped as <group>_<operation>. excludedGroups has to be re-derived by hand, because a live tools/list cannot produce it.",
+    "tools: allowed operations per group. meta: tools that are not <group>_<operation>. excludedGroups: Whop tool groups with no tool on this surface."
+  ],
+  "source": "tools/list of the /chatgpt/mcp route on its feature branch (not live), 2026-11-05",
+  "meta": [
+    "connection_status",
+    "search",
+    "fetch",
+    "report_feedback",
+    "ask_question"
+  ],
+  "tools": {
+    "accounts": [
+      "create",
+      "customer_tracking",
+      "fees_get",
+      "form_company",
+      "get",
+      "list",
+      "me",
+      "reserves",
+      "retry_ads_payment",
+      "search",
+      "update"
+    ],
+    "ad-campaigns": [
+      "create",
+      "delete",
+      "duplicate",
+      "get",
+      "list",
+      "pause",
+      "unpause",
+      "update"
+    ],
+    "ad-groups": [
+      "create",
+      "delete",
+      "duplicate",
+      "get",
+      "list",
+      "pause",
+      "unpause",
+      "update"
+    ],
+    "ads": [
+      "create",
+      "delete",
+      "duplicate",
+      "get",
+      "list",
+      "pause",
+      "unpause",
+      "update"
+    ],
+    "affiliates": [
+      "archive",
+      "create",
+      "create-override",
+      "delete-override",
+      "get",
+      "list",
+      "list-overrides",
+      "overrides",
+      "unarchive",
+      "update-override"
+    ],
+    "api-logs": [
+      "list"
+    ],
+    "app-builds": [
+      "create",
+      "get",
+      "list",
+      "promote"
+    ],
+    "app-installations": [
+      "get",
+      "list"
+    ],
+    "apps": [
+      "create",
+      "delete",
+      "deploy",
+      "get",
+      "list"
+    ],
+    "audiences": [
+      "add_people",
+      "create",
+      "delete",
+      "list",
+      "update"
+    ],
+    "authorized-users": [
+      "get",
+      "list"
+    ],
+    "bounties": [
+      "get",
+      "get-submission",
+      "list",
+      "submissions"
+    ],
+    "bounty-submissions": [
+      "create",
+      "delete",
+      "get",
+      "list",
+      "submit"
+    ],
+    "cashback-rules": [
+      "list"
+    ],
+    "chat-channels": [
+      "get",
+      "list",
+      "update"
+    ],
+    "checkout-configurations": [
+      "create",
+      "delete",
+      "get",
+      "list"
+    ],
+    "company-token-transactions": [
+      "get",
+      "list"
+    ],
+    "course-chapters": [
+      "create",
+      "delete",
+      "get",
+      "list",
+      "update"
+    ],
+    "course-lesson-interactions": [
+      "get",
+      "list"
+    ],
+    "course-lessons": [
+      "create",
+      "delete",
+      "get",
+      "list",
+      "mark_as_completed",
+      "start",
+      "submit_assessment",
+      "update"
+    ],
+    "course-students": [
+      "get",
+      "list"
+    ],
+    "courses": [
+      "create",
+      "delete",
+      "get",
+      "list",
+      "update"
+    ],
+    "dispute-alerts": [
+      "get",
+      "list"
+    ],
+    "disputes": [
+      "get",
+      "list",
+      "submit",
+      "summary",
+      "update",
+      "upload_evidence"
+    ],
+    "dm-channels": [
+      "create",
+      "delete",
+      "get",
+      "list",
+      "update"
+    ],
+    "dm-members": [
+      "create",
+      "delete",
+      "get",
+      "list",
+      "update"
+    ],
+    "docs": [
+      "query",
+      "search"
+    ],
+    "domains": [
+      "check",
+      "create",
+      "delete",
+      "get",
+      "list",
+      "update"
+    ],
+    "events": [
+      "create",
+      "list",
+      "pulse",
+      "validate_pixel"
+    ],
+    "experiences": [
+      "attach",
+      "create",
+      "delete",
+      "detach",
+      "duplicate",
+      "get",
+      "list",
+      "update"
+    ],
+    "experiments": [
+      "activate",
+      "create",
+      "end",
+      "exposures",
+      "get",
+      "list",
+      "pause",
+      "update"
+    ],
+    "exports": [
+      "create",
+      "get",
+      "list"
+    ],
+    "external-accounts": [
+      "connect",
+      "create",
+      "delete",
+      "list",
+      "refresh"
+    ],
+    "files": [
+      "complete",
+      "create",
+      "get",
+      "list"
+    ],
+    "forum-posts": [
+      "create",
+      "get",
+      "list",
+      "update"
+    ],
+    "forums": [
+      "get",
+      "list",
+      "update"
+    ],
+    "invoices": [
+      "generate_pdf",
+      "get",
+      "list"
+    ],
+    "leads": [
+      "create",
+      "get",
+      "list",
+      "update"
+    ],
+    "ledger-accounts": [
+      "get"
+    ],
+    "ledgers": [
+      "breakdown",
+      "list",
+      "report"
+    ],
+    "livestreams": [
+      "get",
+      "list",
+      "pin",
+      "unpin"
+    ],
+    "media": [
+      "generate",
+      "get"
+    ],
+    "members": [
+      "get",
+      "list",
+      "logs",
+      "notes_create",
+      "notes_list",
+      "update"
+    ],
+    "memberships": [
+      "cancel",
+      "get",
+      "list",
+      "pause",
+      "resume",
+      "resync_access",
+      "transfer"
+    ],
+    "messages": [
+      "create",
+      "delete",
+      "get",
+      "list",
+      "update"
+    ],
+    "notifications": [
+      "badges",
+      "create",
+      "get",
+      "list",
+      "mark_read",
+      "topics"
+    ],
+    "partner-referral-requests": [
+      "cancel",
+      "create",
+      "decline",
+      "get",
+      "list"
+    ],
+    "partners": [
+      "create",
+      "earnings",
+      "fee_options",
+      "get",
+      "leaderboard",
+      "list",
+      "referred_users",
+      "retrieve"
+    ],
+    "payment-rules": [
+      "activate",
+      "create",
+      "deactivate",
+      "delete",
+      "fields",
+      "get",
+      "list",
+      "replace",
+      "update"
+    ],
+    "payments": [
+      "fees",
+      "generate_pdf",
+      "get",
+      "list",
+      "summary"
+    ],
+    "people": [
+      "get",
+      "list"
+    ],
+    "permissions": [
+      "check"
+    ],
+    "product-affiliates": [
+      "list"
+    ],
+    "products": [
+      "create",
+      "delete",
+      "get",
+      "list",
+      "publish",
+      "unpublish",
+      "update"
+    ],
+    "promo-codes": [
+      "activate",
+      "create",
+      "deactivate",
+      "delete",
+      "get",
+      "list"
+    ],
+    "reactions": [
+      "create",
+      "delete",
+      "get",
+      "list"
+    ],
+    "refunds": [
+      "get",
+      "list"
+    ],
+    "resolution-center-cases": [
+      "appeal",
+      "create",
+      "deny",
+      "events",
+      "get",
+      "list",
+      "reply",
+      "request_info",
+      "summary",
+      "withdraw"
+    ],
+    "reviews": [
+      "delete",
+      "get",
+      "list"
+    ],
+    "search": [
+      "list"
+    ],
+    "shipments": [
+      "create",
+      "get",
+      "list",
+      "lookup",
+      "update"
+    ],
+    "stats": [
+      "get",
+      "list",
+      "reports_list",
+      "time-series_get",
+      "time-series_list"
+    ],
+    "support-channels": [
+      "create",
+      "get",
+      "list"
+    ],
+    "team-members": [
+      "delete",
+      "get",
+      "list"
+    ],
+    "users": [
+      "access",
+      "fees",
+      "get",
+      "list",
+      "me",
+      "preferences_get",
+      "preferences_notifications_experiences",
+      "preferences_notifications_topics",
+      "preferences_notifications_update",
+      "update",
+      "update-me"
+    ],
+    "variants": [
+      "calculate_tax",
+      "create",
+      "delete",
+      "get",
+      "list",
+      "update"
+    ],
+    "waitlist-entries": [
+      "cancel",
+      "create",
+      "deny",
+      "get",
+      "list"
+    ]
+  },
+  "excludedGroups": [
+    "access-tokens",
+    "account-links",
+    "ad-conversion-value-rules",
+    "ad-pixels",
+    "ai-chats",
+    "api-keys",
+    "cards",
+    "confirmation-tokens",
+    "deposits",
+    "economic-intelligence",
+    "email-addresses",
+    "fee-markups",
+    "financing-applications",
+    "identity-profiles",
+    "payment-method-domains",
+    "payment-methods",
+    "payment-quotes",
+    "payout-accounts",
+    "payout-methods",
+    "payouts",
+    "plans",
+    "setup-intents",
+    "social-accounts",
+    "swaps",
+    "trades",
+    "transfers",
+    "verifications",
+    "webhooks"
+  ]
+}
