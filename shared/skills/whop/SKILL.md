@@ -1,75 +1,61 @@
 ---
 name: whop
-{{#if claude}}
-description: "Work with the user's Whop business through the Whop MCP tools: websites on *.whop.app, products, checkout links, payments, refunds, disputes, memberships, ads, LLC/C-corp formation, and stats. Use when the user mentions Whop or whop.com, or asks about something that lives in their Whop account (a Whop store, membership, checkout link, or Whop ads campaign)."
-{{else}}
-description: "Run a business on Whop: websites on *.whop.app, products, checkout, payments, payouts, memberships, ads, LLC/C-corp formation, bounties, and stats. Use when the user mentions Whop, whop.com, their store, a membership or product, checkout links, payouts or transfers, Meta/TikTok ads, forming a company, or anything the Whop MCP tools provide."
-{{/if}}
+description: "Start here for work on the user's Whop business through the Whop MCP tools: checks the connection, picks the business, and points to the right Whop skill. Use when the user mentions Whop or whop.com, asks which Whop businesses they have, wants to create a business, or asks for something in their Whop account that no other Whop skill covers."
 ---
 
 # Whop
 
 This plugin connects {{CLIENT_NAME}} to a live Whop business through the Whop MCP
-{{#if claude}}
-server. Use these tools for work on the user's Whop account. For anything outside
-Whop — another store platform, another ad account, general business advice — use
-whatever else the user has set up. No CLI is needed.
-{{else}}
-server. Those tools are the way to do everything — there is no second path to
-prefer, and no CLI to install.
-{{/if}}
+server. The tools act on the user's real account. No CLI and no API key are needed.
 
 ## Before anything else
 
-1. **Check the connection.** Call `connection_status`. It returns the authenticated
-   identity, the selected account, granted scopes, and tool coverage. If it fails or
-   the plugin's tools are missing, the user has not completed OAuth — tell them to
-   run {{CONNECT_COMMAND}}.
-2. **Discover, do not guess.** Tool names follow `<group>_<operation>`, with
-   hyphens inside multi-word groups (`payments_list`, `ad-campaigns_update`). Read
-   the tool's own schema before calling it. Never invent a tool name, a field, or an
-   enum value — if you cannot find it, say so and ask.
-3. **Know the account.** `connection_status` returns `account_id`, and it is often
-   **null** — a user grant is not bound to one business. When it is null, nothing is
-   selected for you: get the id from `accounts_list` and pass `account_id` (`biz_…`)
-   explicitly on account-scoped calls. Never assume a default business.
+1. **Check the connection.** Call `connection_status`. It returns the signed-in
+   identity, the selected account, the granted scopes and the tool coverage. If it
+   fails or no Whop tools are loaded, the user has not signed in: ask them to
+   connect with {{CONNECT_COMMAND}}.
+2. **Pick the business.** `connection_status` often returns a null `account_id`,
+   because a sign-in is not tied to one business. Call `accounts_list`, and pass the
+   chosen `account_id` (`biz_…`) on every call that accepts it. Several businesses:
+   ask which one. Never assume a default.
+3. **Fill the two tracking fields.** Most tools require `intent` and `intent_id`.
+   `intent` is the user's request, copied word for word. `intent_id` is a UUID you
+   generate once per user message and reuse for every call made for that message.
 
-## What to run
+## How the tools are laid out
 
-| Job | Start here | Playbook |
+The server lists its most-used tools by name, such as `payments_list` and
+`products_create`. Everything else Whop can do is still available, but not listed:
+find it with `search_operations` and run it with `call_read_operation` or
+`call_write_operation`. So a tool missing from the list does not mean Whop cannot do
+the job. The `whop-docs-and-operations` skill covers this.
+
+Tool names follow `<group>_<operation>`, with hyphens inside a multi-word group
+(`support-channels_list`). Read a tool's schema before calling it. Never invent a
+tool name, a field or an enum value.
+
+## Which skill to load
+
+| The user wants to | Skill | Listed tools |
 | --- | --- | --- |
-| Check who I am / what I can do | `connection_status` | — |
-| Ship a website on `*.whop.app` | `apps_create`, then `apps_deploy` | [references/websites.md](references/websites.md) |
-| Sell something | `products_*`, `plans_*`, `checkout-configurations_*` | — |
-| Customers and access | `members_*`, `memberships_*` | — |
-{{#if claude}}
-| Payments, refunds, disputes | `payments_*`, `refunds_*`, `disputes_*` | — |
-| Run ads | `ads_*`, `ad-campaigns_*`, `ad-groups_*` | [references/ads.md](references/ads.md) |
-| Form an LLC or C-corp | `accounts_form_company` | [references/formation.md](references/formation.md) |
-{{else}}
-| Take and manage money | `payments_*`, `payouts_*`, `transfers_*`, `deposits_*`, `cards_*`, `disputes_*` | — |
-| Run ads | `media_generate`, `ads_*`, `ad-campaigns_*`, `ad-groups_*` | [references/ads.md](references/ads.md) |
-| Form an LLC or C-corp | `accounts_form_company` | [references/formation.md](references/formation.md) |
-| Hire | `bounties_*`, `bounty-submissions_*` | — |
-{{/if}}
-| Measure | `stats_*`, `exports_*`, `events_*`, `people_*` | — |
-| Developer surface | `apps_*`, `app-builds_*`, `api-keys_*`, `webhooks_*` | — |
+| See sales, refund a payment, check disputes | `whop-payments` | `payments_*`, `refunds_list`, `disputes_list`, `resolution-center-cases_list` |
+| Create or change products, prices, promo codes, checkout links | `whop-products` | `products_*`, `variants_*`, `promo-codes_create` |
+| Look up customers, check or cancel a membership | `whop-customers` | `members_list`, `memberships_*`, `events_list` |
+| Build or edit a course, upload a file | `whop-courses` | `experiences_*`, `courses_create`, `course-chapters_*`, `course-lessons_*`, `files_*` |
+| Read or answer chats, DMs, support, forum posts | `whop-community` | `messages_*`, `dm-channels_list`, `support-channels_list`, `forum-posts_*` |
+| See revenue and other metrics over time | `whop-stats` | `stats_time-series_get` |
+| Read the Whop docs, or do anything not listed above (websites, ads, forming a company, webhooks, invoices and more) | `whop-docs-and-operations` | `docs_search`, `docs_query`, `search_operations`, `describe_operation`, `call_read_operation`, `call_write_operation` |
 
-The table is a router, not a schema. Read the playbook before websites, ads, or
-formation — each has ordering traps that a tool description alone does not teach.
+Three listed tools belong to no other skill:
 
-## Working with app source
+- `accounts_list` and `accounts_get` read the businesses the user can act on.
+- `accounts_create` sets up a new business owned by the signed-in user. Tax details
+  are added afterwards, not at creation.
+- `bounties_list` shows paid clipping and content work the user can see.
 
-`apps_deploy` builds the app's **current source on Whop** and ships it, so deploying
-an app Whop already holds needs nothing local. Only one deployment runs per app at a
-time; calling it again reports the running one instead of starting a second, and
-calling it with nothing to publish says so. Pass `draft: true` to upload without
-making it live.
-
-To ship code that only exists on this machine, do the local half yourself and the
-rest over MCP: write and build the files with your own tools, upload the artifact
-with `files_create` / `files_complete`, register it with `app-builds_create`, then
-`app-builds_promote`. Do not tell the user to install a CLI for this.
+`search` and `fetch` do a keyword lookup across products, prices, payments and
+members and return one record by id. Prefer the specific list tool with `account_id`
+when you know what you are looking for.
 
 ## Working agreement
 
@@ -80,6 +66,9 @@ with `files_create` / `files_complete`, register it with `app-builds_create`, th
   what will happen and what it costs, and wait for the user to say yes. Drafts,
   previews, and reads need no confirmation.
 {{/if}}
+- **Confirm before anything a customer feels.** A refund, a cancelled membership, a
+  price change and a sent message reach real people and are hard to take back. Say
+  exactly what will happen and wait for a yes. Each skill names its own cases.
 - **Action links are for the user, not for you.** When a response carries
   `authorize_url`, `session_url`, `deposit_url`, or `checkout_url`, give the link to
   the user and say what they need to finish there. Do not fetch or curl it to
@@ -90,6 +79,25 @@ with `files_create` / `files_complete`, register it with `app-builds_create`, th
   date of birth, home address) are legitimate inputs to the flows that need them.
   Pass them straight through to the tool. Never repeat them back in your response,
   write them to a file, or infer a value the user did not supply.
+
+## Errors
+
+A failed call returns `isError: true` with `{ "error": { "code", "message" } }`.
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `not_authenticated` | The user is not signed in | Ask them to connect with {{CONNECT_COMMAND}} |
+| `account_required` | The tool needs a business | Pass `account_id` from `accounts_list` |
+| `missing_scope` | The sign-in lacks a permission | Say which action is not permitted; signing in again may grant it |
+| `invalid_input` | An argument is missing or wrong | Re-read the schema and correct it |
+| `tool_not_found` | No such tool or operation on this connection | Look for it with `search_operations` |
+| `upstream_error` | Whop refused the call | Follow the message; status 429 means wait and retry |
+| `timeout` | Whop did not answer in time | Read the record back before retrying a write |
+
+After a write whose result is unclear, read the record back before trying again.
+Writes that accept `idempotency_key` replay the first result when the same key is
+sent again, so reuse the key on a retry. `messages_create` and `forum-posts_create`
+take no key: a repeated call sends or posts a second time.
 
 ## What these tools cannot reach
 
@@ -102,7 +110,8 @@ here and send them to whop.com to do it themselves. Do not look for a workaround
 Passkeys and OAuth grants (`users_me_passkeys*`, `users_me_oauth_grants*`) need a
 first-party whop.com browser session and are also absent. Send the user to whop.com
 for those.
-{{else}}
+{{/if}}
+{{#if grok}}
 Passkeys and OAuth grants (`users_me_passkeys*`, `users_me_oauth_grants*`) need a
 first-party whop.com browser session and are deliberately absent. Send the user to
 whop.com for those; no tool and no CLI will do it.
