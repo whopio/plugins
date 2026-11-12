@@ -1,0 +1,21 @@
+{
+  "name": "whop",
+  "displayName": "Whop",
+  "version": "1.2.0",
+  "author": {
+    "name": "Whop",
+    "url": "https://whop.com"
+  },
+  "homepage": "https://docs.whop.com/",
+  "repository": "https://github.com/whopio/plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "whop",
+    "sell online",
+    "accept payments",
+    "online store",
+    "memberships",
+    "run ads"
+  ],
+  "description": "Official Whop integration (MCP Server + Skills). Sign in with your Whop account to launch websites, create products and memberships with checkout links, accept payments and manage refunds, payouts, and disputes, run Meta and TikTok ads, form an LLC or C-corp, post bounties, and read stats from your AI agent."
+}
