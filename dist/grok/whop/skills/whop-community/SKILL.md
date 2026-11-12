@@ -23,8 +23,9 @@ conversation, do the steps in the `whop` skill first.
 ## Reading
 
 1. Find the conversation. `support-channels_list` with `open: true` returns the
-   ones still waiting for a reply. Without `account_id` it covers every business
-   the user can reach. `dm-channels_list` returns the DM inbox.
+   ones still waiting for a reply. When the user names a business, pass its
+   `account_id`; without it the list mixes in every other business the user can
+   reach. `dm-channels_list` returns the DM inbox.
 2. Read it with `messages_list` and the `channel_id`. For a community chat, the
    chat's experience id works as the `channel_id`.
 

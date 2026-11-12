@@ -105,7 +105,9 @@ take no key: a repeated call sends or posts a second time.
 This connection deliberately leaves out AI media generation and anything that moves
 money out of the account: payouts, transfers, bounty rewards, card issuing, balance
 top-ups, and trading. If the user asks for one of those, say it is not available
-here and send them to whop.com to do it themselves. Do not look for a workaround.
+here and send them to whop.com to do it themselves. Do not look for another way to
+move the money. Reading the balance or payout setup to explain what the user will
+need there is fine.
 
 Passkeys and OAuth grants (`users_me_passkeys*`, `users_me_oauth_grants*`) need a
 first-party whop.com browser session and are also absent. Send the user to whop.com

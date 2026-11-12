@@ -97,5 +97,10 @@ in either.
 
 This connection leaves out AI media generation and anything that moves money out of
 the account: payouts, transfers, bounty rewards, card issuing, balance top-ups and
-trading. `search_operations` will not find them. Say they are not available here
-and send the user to whop.com.
+trading. `search_operations` will not find the operations that do those things.
+Say they are not available here and send the user to whop.com.
+
+Reading is still allowed and often helps. Before sending the user away for a
+withdrawal, look up what `search_operations` finds for the balance and the payout
+methods, and tell them what stands in the way: no saved bank account, unfinished
+identity verification, or too small a balance.

@@ -22,7 +22,9 @@ conversation, do the steps in the `whop` skill first.
 ## Finding payments
 
 - `payments_list` covers **every business the user can read** unless you pass
-  `account_id`. Pass it whenever the user means one business.
+  `account_id`. When the user names a business, pass its `account_id` together
+  with any `query`: a search by email or name alone also returns that person's
+  payments at the user's other businesses.
 - `query` searches by payment id, dispute id, user id, membership id, email, name or
   username. Searching by email needs the `member:email:read` permission.
 - `status` narrows to one state, such as `paid`. Read the schema for the values.

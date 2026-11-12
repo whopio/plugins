@@ -42,12 +42,20 @@ Each step needs the id the step before returns.
 {{else}}
    Find that id with `search_operations` ("list apps") and `call_read_operation`.
 {{/if}}
-2. `courses_create` with the `experience_id` and a `title`.
-3. `course-chapters_create` with the `course_id` and a `title`.
+2. `courses_create` with the `experience_id` and a `title`. Whop adds a placeholder
+   "Chapter 1" holding a "Lesson 1" to every new course. Read them back and reuse
+   them for the first chapter and lesson (`course-chapters_update`,
+   `course-lessons_update`), so the course is not left with an empty extra chapter.
+3. `course-chapters_create` with the `course_id` and a `title`, for each further
+   chapter.
 4. `course-lessons_create` with the `chapter_id` and a `lesson_type`: `text`,
-   `video`, `pdf`, `multi`, `quiz` or `knowledge_check`. `content` is Markdown.
+   `video`, `pdf`, `multi`, `quiz` or `knowledge_check`. `content` is Markdown. It
+   has no `visibility` input and always creates the lesson visible. For a draft,
+   follow it at once with `course-lessons_update` and `visibility: hidden`, and
+   tell the user the lesson was visible for the moment in between.
 5. `experiences_attach` with the experience `id` and the `product_id`, so that
-   product's customers can open it. Until then no customer has access.
+   product's customers can open it. Until then no customer has access. It gives
+   access to the whole experience: every course in it, now and later.
 
 To edit an existing course you need its ids.
 {{#if openai}}
@@ -61,10 +69,15 @@ Listing courses, chapters and lessons is not a listed tool: find them with
 ## What students see
 
 A new or edited lesson is visible to the course's students according to its
-`visibility`. Before adding a lesson to a course that already has students, or
-changing one they can see, tell the user what will change and wait for a yes. The
-same goes for `experiences_attach`, which opens the content to every customer of
-that product.
+`visibility`, and `experiences_attach` opens the content to every customer of that
+product. Both reach real people, so the user has to have asked for the change.
+
+- If the user asked for exactly this change (this lesson in this course, this
+  course on this product), do it, then say what students or customers can now see.
+- If the change goes beyond what they asked for, tell the user what will change and
+  wait for a yes. That covers a lesson they did not name, editing a lesson students
+  can already see when they asked for something else, and attaching to a product
+  that already has customers when they did not name that product.
 
 `course-lessons_update` sets a lesson's `visibility` to `visible` or `hidden` (a
 draft). Its `attachments` input replaces every attachment the lesson already has,

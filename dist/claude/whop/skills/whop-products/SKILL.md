@@ -44,10 +44,14 @@ the user's store. Always pass `account_id` to see their own products.
    - Amounts are written in the currency itself: `10.43` means $10.43, not cents. A
      paid price is at least `1.00`; use `0` for free. `currency` defaults to USD.
    - `trial_period_days` adds a free trial before the first recurring charge.
-3. Give the user a checkout link. That is not a listed tool: call `search_operations`
-   with "create a checkout link" and run the match with `call_write_operation`. It
-   returns a `purchase_url` to send customers to. Nobody is charged until a customer
-   checks out.
+3. Give the user the checkout link. The new variant comes back with a
+   `purchase_url`: that is the link to send customers to. Nobody is charged until a
+   customer checks out. The variant's id starts with `plan_`, Whop's older name
+   for a price.
+   Create a separate checkout link only when the user wants one with its own
+   settings, such as a redirect after purchase or an affiliate code. That is not a
+   listed tool: call `search_operations` with "create a checkout link" and run the
+   match with `call_write_operation`.
 
 `variants_create` and `variants_update` leave some optional inputs out of the
 listing. Call `describe_operation` with the tool name to see all of them; the tool
