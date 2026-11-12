@@ -56,7 +56,7 @@ Everywhere but ChatGPT and Codex, the first Whop tool call opens a browser for W
 | `whop` skill | `shared/skills/whop/` | The entry point: checks the connection, picks the business, and points to the skill for the job. |
 | Job skills | `shared/skills/whop-payments/`, `whop-products/`, `whop-customers/`, `whop-courses/`, `whop-community/`, `whop-stats/` | One per job. Each covers the tools the MCP server lists by name for that job, the order to call them in, and what to confirm with the user first. |
 | `whop-docs-and-operations` skill | `shared/skills/whop-docs-and-operations/` | How to search the Whop docs and how to find and run every operation the server does not list by name, with guides for websites, ads, and company formation. |
-| ChatGPT `whop` skill | `clients/openai/skills/whop/` | ChatGPT and Codex do not get the job skills yet. They get one skill that lists every command group and which tool starts each job, with guides for websites, ads, and company formation. |
+| ChatGPT `whop` skill | `clients/openai/skills/whop/` | ChatGPT and Codex get the same job skills, but their own entry skill. It holds the rules OpenAI's review asks for: what needs a yes, what the plugin will not do, and which data it never shows. |
 | `whop-connect` command | `clients/<client>/skills/whop-connect/` | Checks you are signed in, then names the account and what it can reach. Written once per client, because each names its menus differently. |
 
 ## Repository layout

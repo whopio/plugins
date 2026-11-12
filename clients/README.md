@@ -19,14 +19,14 @@ this repo at a commit. They never run the build.
 | `description` | It names the client, and lands in that client's catalog. |
 | Tokens | `{{CLIENT_NAME}}` and `{{CONNECT_COMMAND}}` in the shared skills; `{{MCP_URL}}` in the MCP config. Claude points at the directory endpoint `/claude/mcp`. |
 | Directory restrictions | Claude's directory listing leaves out AI media generation and money-out tools, and asks before anything spends money or goes live. The shared Markdown holds that text in `{{#if claude}} … {{else}} … {{/if}}` blocks, so other clients keep the full surface. ChatGPT serves AI media but leaves out issuing refunds, one-off charges to customers, money movement, identity verification, and credentials; its skill gets a yes before anything that costs money or goes live. |
-| What the route lists | Each skill names only the tools its client's route has. Claude and Grok list the most-used tools and reach the rest with `search_operations` and `call_read_operation` / `call_write_operation`. The job skills also hold `{{#if openai}}` blocks for the ChatGPT route, which lists every tool by name and has no search, call or refund tool. The `openai` client does not use them yet: it sets `"skills": []` and ships its own single `whop` skill from `clients/openai/skills/whop/`, so those blocks are left out of every build for now. |
+| What the route lists | Each skill names only the tools its client's route has. Claude and Grok list the most-used tools and reach the rest with `search_operations` and `call_read_operation` / `call_write_operation`. The job skills also hold `{{#if openai}}` blocks for the ChatGPT route, which lists every tool by name and has no search, call or refund tool. The `openai` build keeps those blocks. |
 
 The shared skills, the three playbooks, and the MCP config come from one source for
 Claude, Grok and the generic client. The per-client blocks above are the only place
-they differ. OpenAI ships its own `whop` skill, its own ads and formation playbooks
-(`clients/openai/skills/whop/references/`), and its own MCP config
-(`clients/openai/mcp.json`). It shares only the websites playbook, copied in through
-`extraFiles`.
+they differ. OpenAI takes the same job skills and the websites playbook, with its own entry
+`whop` skill (`clients/openai/skills/whop/`), its own ads and formation playbooks
+(`clients/openai/skills/whop-docs-and-operations/references/`), and its own MCP
+config (`clients/openai/mcp.json`).
 
 ## Status
 

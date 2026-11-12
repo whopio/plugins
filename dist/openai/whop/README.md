@@ -11,7 +11,15 @@ Whop's plugin connects ChatGPT and Codex to the Whop businesses you run, through
 ## What's included
 
 - **Whop MCP server** — the tools that act on your Whop account.
-- **`whop` skill** — maps each job to the right tools, with guides for websites and domains, ads, and company formation.
+- **Skills** — one per job, so ChatGPT and Codex knows which tools to use and what to check first:
+  - `whop` — checks the connection, picks the business, and points to the right skill.
+  - `whop-payments` — sales, refund history, disputes, and buyer complaints.
+  - `whop-products` — products, prices, promo codes, and checkout links.
+  - `whop-customers` — members, memberships, and cancellations.
+  - `whop-courses` — courses, lessons, apps, and file uploads.
+  - `whop-community` — support chats, DMs, community chat, and forum posts.
+  - `whop-stats` — revenue and other metrics over time.
+  - `whop-docs-and-operations` — searches the Whop docs and reaches everything else, with guides for websites, ads, and company formation.
 - **`whop-connect` setup skill** — checks you are signed in and names the account it can reach.
 
 ## Links

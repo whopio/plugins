@@ -7,10 +7,6 @@
   "mcpTemplate": "clients/openai/mcp.json",
   "dropManifestKeys": ["displayName"],
   "lineEndings": "lf",
-  "skills": [],
-  "extraFiles": {
-    "skills/whop/references/websites.md": "shared/skills/whop-docs-and-operations/references/websites.md"
-  },
   "tokens": {
     "CLIENT_NAME": "ChatGPT and Codex",
     "CONNECT_COMMAND": "`$whop:whop-connect` (in Codex)",

@@ -51,20 +51,25 @@ complete course lessons, or submit work to a bounty.
 
 ## What to run
 
-| Job | Start here | Playbook |
+Each job has a skill that holds the steps. Load it before you start the job.
+
+| Job | Start here | Skill |
 | --- | --- | --- |
-| Check who I am / what I can do | `connection_status` | — |
-| Publish a website Whop already holds | `apps_list` with `account_id` and `app_type: "website"`, `app-builds_list`, then `app-builds_promote` | [references/websites.md](references/websites.md) |
-| Build a new website (Codex only) | `apps_create`, then upload a build | [references/websites.md](references/websites.md) |
-| Connect or buy a domain | `domains_*` | [references/websites.md](references/websites.md) |
-| Products, prices, and checkout links for the user's customers | `products_*`, `variants_*`, `checkout-configurations_*`, `promo-codes_*` | — |
-| Customers and access | `members_*`, `memberships_*` | — |
-| Payments, refunds, disputes (read and respond) | `payments_*`, `refunds_*`, `disputes_*`; Resolution Center cases as the merchant: `resolution-center-cases_list`, `_get`, `_events`, `_summary`, `_reply`, `_request_info`, `_deny` | — |
-| Balance and ledger (read only) | `ledgers_*`, `ledger-accounts_get` | — |
-| Run Whop Ads | `ad-campaigns_*`, `ad-groups_*`, `ads_*`, `media_generate` | [references/ads.md](references/ads.md) |
-| Form an LLC or C-corp | `accounts_form_company` | [references/formation.md](references/formation.md) |
-| Measure | `stats_*` (read only); `exports_*` only when the user asks for an export, and never of anything under "What these tools cannot reach": no `payouts`, `transfers`, `payout_methods`, `external_accounts`, `card_transactions`, `financial-activity`, or `webhooks` | — |
-| Developer surface | `apps_*`, `app-builds_*` | — |
+| Check who I am / what I can do | `connection_status` | this one |
+| Publish a website Whop already holds | `apps_list` with `account_id` and `app_type: "website"`, `app-builds_list`, then `app-builds_promote` | `whop-docs-and-operations`, websites playbook |
+| Build a new website (Codex only) | `apps_create`, then upload a build | `whop-docs-and-operations`, websites playbook |
+| Connect or buy a domain | `domains_*` | `whop-docs-and-operations`, websites playbook |
+| Products, prices, and checkout links for the user's customers | `products_*`, `variants_*`, `checkout-configurations_*`, `promo-codes_*` | `whop-products` |
+| Customers and access | `members_*`, `memberships_*` | `whop-customers` |
+| Courses, the apps set up in a business, and file uploads | `experiences_*`, `courses_*`, `course-chapters_*`, `course-lessons_*`, `files_*` | `whop-courses` |
+| Support chats, DMs, community chat, and forum posts | `support-channels_*`, `dm-channels_*`, `messages_*`, `forum-posts_*` | `whop-community` |
+| Payments, refunds, disputes (read and respond) | `payments_*`, `refunds_*`, `disputes_*`; Resolution Center cases as the merchant: `resolution-center-cases_list`, `_get`, `_events`, `_summary`, `_reply`, `_request_info`, `_deny` | `whop-payments` |
+| Balance and ledger (read only) | `ledgers_*`, `ledger-accounts_get` | this one |
+| Run Whop Ads | `ad-campaigns_*`, `ad-groups_*`, `ads_*`, `media_generate` | `whop-docs-and-operations`, ads playbook |
+| Form an LLC or C-corp | `accounts_form_company` | `whop-docs-and-operations`, formation playbook |
+| Measure | `stats_*` (read only); `exports_*` only when the user asks for an export, and never of anything under "What these tools cannot reach": no `payouts`, `transfers`, `payout_methods`, `external_accounts`, `card_transactions`, `financial-activity`, or `webhooks` | `whop-stats` |
+| Developer surface | `apps_*`, `app-builds_*` | `whop-docs-and-operations` |
+| Read the Whop docs, or anything not in this table | `docs_search`, `docs_query` | `whop-docs-and-operations` |
 
 The table is a router, not a schema. Read the playbook before websites, domains,
 ads, or formation — each has ordering traps that a tool description alone does not
@@ -97,7 +102,7 @@ user publishes from the Whop dashboard.
 To ship code that only exists on this machine, do the local half yourself and the
 rest over MCP: write and build the files with your own tools, pack them as a `.zip`
 with `manifest.json` at its root (the layout is in
-[references/websites.md](references/websites.md), and any other archive uploads fine
+the websites playbook in `whop-docs-and-operations`, and any other archive uploads fine
 but serves only errors), upload it (`files_create`, then PUT the bytes to its `upload_url` with its
 `upload_headers`, then `files_get` until `upload_status` is `ready`; `files_complete`
 is only for a multipart upload), register it with `app-builds_create`, then
@@ -222,7 +227,7 @@ offer to publish it and connect or buy its domain here.
   `hosted_url` is deprecated and can be null. None of these are action links.
 - **Identity data only for formation.** Founder details (home address, date of
   birth) are only for a company formation the user asked for; follow
-  [references/formation.md](references/formation.md). Never ask for an SSN. Never ask for, accept, or
+  the formation playbook in `whop-docs-and-operations`. Never ask for an SSN. Never ask for, accept, or
   pass on payment card or bank account numbers, passwords, API keys, one-time
   codes, or a domain transfer (EPP) code. If the user offers one, do not repeat it
   or send it to a tool, and ask them not to share it here.

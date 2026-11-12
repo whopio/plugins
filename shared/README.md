@@ -31,19 +31,22 @@ The official Whop plugin connects {{CLIENT_NAME}} to your Whop business through 
 ## What's included
 
 - **Whop MCP server** — the tools that act on your Whop account.
-{{#if openai}}
-- **`whop` skill** — maps each job to the right tools, with guides for websites and domains, ads, and company formation.
-- **`whop-connect` setup skill** — checks you are signed in and names the account it can reach.
-{{else}}
 - **Skills** — one per job, so {{CLIENT_NAME}} knows which tools to use and what to check first:
   - `whop` — checks the connection, picks the business, and points to the right skill.
+{{#if openai}}
+  - `whop-payments` — sales, refund history, disputes, and buyer complaints.
+{{else}}
   - `whop-payments` — sales, refunds, disputes, and buyer complaints.
+{{/if}}
   - `whop-products` — products, prices, promo codes, and checkout links.
   - `whop-customers` — members, memberships, and cancellations.
   - `whop-courses` — courses, lessons, apps, and file uploads.
   - `whop-community` — support chats, DMs, community chat, and forum posts.
   - `whop-stats` — revenue and other metrics over time.
   - `whop-docs-and-operations` — searches the Whop docs and reaches everything else, with guides for websites, ads, and company formation.
+{{#if openai}}
+- **`whop-connect` setup skill** — checks you are signed in and names the account it can reach.
+{{else}}
 - **`whop-connect` command** — checks you are signed in and names the account it can reach.
 {{/if}}
 
