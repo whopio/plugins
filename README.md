@@ -72,6 +72,8 @@ clients/<client>/                Everything that differs per client
 dist/<client>/whop/              AUTO-GENERATED
 .claude-plugin/marketplace.json   Claude marketplace, sources ./dist/claude/whop
 .plugin/marketplace.json          Marketplace for `npx plugins add`, sources ./dist/generic/whop
+.github/plugin/marketplace.json    Same file, where GitHub Copilot CLI looks first
+.cursor-plugin/marketplace.json   Same file, where Cursor looks
 scripts/build.sh                  Compose dist/ from shared/ + clients/
 scripts/validate.sh               Structure, JSON, and dist/-freshness checks
 scripts/check_openai_plugin.py    Offline check of an OpenAI plugin ZIP or folder

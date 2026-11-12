@@ -22,8 +22,19 @@ import json, os, sys
 problems = []
 
 # Each marketplace file, and the manifest directory its plugins must carry.
-# Claude Code reads .claude-plugin/; `npx plugins add` reads .plugin/ first.
-MARKETPLACES = [(".claude-plugin", ".claude-plugin"), (".plugin", ".plugin")]
+# Claude Code reads .claude-plugin/. `npx plugins add` reads .plugin/ first, GitHub
+# Copilot CLI reads .github/plugin/ first, and Cursor reads .cursor-plugin/. Those
+# three must stay identical, so every install outside a directory gets one build.
+MARKETPLACES = [
+    (".claude-plugin", ".claude-plugin"),
+    (".plugin", ".plugin"),
+    (".github/plugin", ".plugin"),
+    (".cursor-plugin", ".cursor-plugin"),
+]
+
+generic = [open(os.path.join(d, "marketplace.json")).read() for d in (".plugin", ".github/plugin", ".cursor-plugin")]
+if len(set(generic)) != 1:
+    problems.append(".plugin/, .github/plugin/ and .cursor-plugin/ marketplace.json must be identical")
 
 entries = []
 for mp_dir, manifest_dir in MARKETPLACES:

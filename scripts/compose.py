@@ -38,6 +38,9 @@ A client may set "sameBlocksAs" in client.json to a list of other clients. It th
 also matches every block written for those clients. The generic client uses this to
 take the same text as Grok, which is on the same MCP route.
 
+A client may set "extraManifestPaths" in client.json to a list of further paths. The
+manifest is written to each as well, for tools that only read their own path.
+
 A client may set "skills" in client.json to a list of skill names. Only those shared
 skills are copied. Without it, every shared skill is copied.
 
@@ -192,11 +195,12 @@ def main() -> None:
     ordered = {k: manifest[k] for k in ("$schema",) if k in manifest}
     ordered.update({k: v for k, v in manifest.items() if k != "$schema"})
 
-    man_dst = out / cfg["manifestPath"]
-    man_dst.parent.mkdir(parents=True, exist_ok=True)
-    with man_dst.open("w", encoding="utf-8", newline=nl) as f:
-        json.dump(ordered, f, indent=2, ensure_ascii=False)
-        f.write("\n")
+    for rel in [cfg["manifestPath"], *cfg.get("extraManifestPaths", [])]:
+        man_dst = out / rel
+        man_dst.parent.mkdir(parents=True, exist_ok=True)
+        with man_dst.open("w", encoding="utf-8", newline=nl) as f:
+            json.dump(ordered, f, indent=2, ensure_ascii=False)
+            f.write("\n")
 
     copy_tree(Path("shared/assets"), out / "assets", tokens, nl)
 

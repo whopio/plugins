@@ -3,6 +3,7 @@
   "displayName": "AI agents",
   "manifestPath": ".plugin/plugin.json",
   "mcpConfigPath": ".mcp.json",
+  "extraManifestPaths": [".cursor-plugin/plugin.json"],
   "sameBlocksAs": ["grok"],
   "tokens": {
     "CLIENT_NAME": "your agent",

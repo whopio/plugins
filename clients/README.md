@@ -48,10 +48,35 @@ it finds: `npx plugins add whopio/plugins`.
   `"sameBlocksAs": ["grok"]` and takes every block written for Grok.
 - Its `whop-connect` skill names no menus, because it cannot know which tool it is
   running in.
-- The installer reads `.plugin/marketplace.json` before
-  `.claude-plugin/marketplace.json`. So `npx plugins add` gives Claude Code the
-  generic build too. Claude Code's own `/plugin marketplace add whopio/plugins`
-  still gets the Claude build.
+
+### Which build each install gets
+
+A directory listing (Claude's, xAI's, OpenAI's) pins its own build. Every other
+install should get the generic build. Three identical marketplace files make that
+so: `.plugin/marketplace.json`, `.github/plugin/marketplace.json` and
+`.cursor-plugin/marketplace.json`.
+
+| Install | Build | Why |
+| --- | --- | --- |
+| `npx plugins add whopio/plugins`, any target | generic | The installer reads `.plugin/marketplace.json` before any other. |
+| Claude Code, `/plugin marketplace add whopio/plugins` | claude | Claude Code reads `.claude-plugin/marketplace.json`. |
+| GitHub Copilot CLI, `copilot plugin marketplace add` | generic | Copilot reads `.github/plugin/marketplace.json` before `.claude-plugin/`. |
+| Cursor, a repository link or a team marketplace | generic | Cursor reads `.cursor-plugin/marketplace.json`, and the build carries `.cursor-plugin/plugin.json`. |
+| Grok catalog, ChatGPT and Codex directory | grok, openai | Each catalog names its own `dist/` path. |
+
+Read from the installer's code, version 1.3.6, and the tools' docs. None of these
+has been run end to end yet.
+
+Things the installer does that are easy to miss:
+
+- For Claude Code and Cursor it writes to the same place, `~/.claude/plugins`, under
+  the marketplace name `whop`. Someone who already added the Claude marketplace gets
+  that copy replaced by the generic build, with updates from GitHub turned off.
+- For Codex it installs the generic build as `whop@plugins-cli`, not the ChatGPT
+  build.
+- Do not add `.claude-plugin/plugin.json` to the generic build. With it, the
+  installer registers the Claude Code marketplace against GitHub, and the next
+  update there switches the install to the Claude build.
 
 ## Adding one
 
