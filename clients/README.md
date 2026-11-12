@@ -29,6 +29,23 @@ every client. The per-client blocks above are the only place they differ.
 | --- | --- | --- |
 | Claude Code | `dist/claude/whop` via `.claude-plugin/marketplace.json` | Shipped, application pending |
 | Grok Build | `dist/grok/whop`, pinned to a commit in xAI's catalog | PR pending |
+| Generic | `dist/generic/whop` via `.plugin/marketplace.json` | Built, not yet tried in each tool |
+
+## The generic client
+
+`clients/generic/` is the build for every tool without a client of its own. It uses
+the vendor-neutral manifest path `.plugin/plugin.json`, which the
+[`plugins`](https://github.com/vercel-labs/plugins) installer converts for each tool
+it finds: `npx plugins add whopio/plugins`.
+
+- It points at `https://mcp.whop.com/mcp`, the same route as Grok, so it sets
+  `"sameBlocksAs": ["grok"]` and takes every block written for Grok.
+- Its `whop-connect` skill names no menus, because it cannot know which tool it is
+  running in.
+- The installer reads `.plugin/marketplace.json` before
+  `.claude-plugin/marketplace.json`. So `npx plugins add` gives Claude Code the
+  generic build too. Claude Code's own `/plugin marketplace add whopio/plugins`
+  still gets the Claude build.
 
 ## Adding one
 

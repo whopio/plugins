@@ -1,6 +1,6 @@
 # Whop plugins
 
-Official Whop plugin for whatever AI agent you use. Works with Claude Code and Grok Build.
+Official Whop plugin for whatever AI agent you use. Works with Claude Code and Grok Build, and installs into other agent tools with one command.
 
 ## Install
 
@@ -18,6 +18,17 @@ Restart Claude Code, then run `/whop:whop-connect`.
 Install `whop` from the built-in marketplace, then run `/whop-connect`. To authorize,
 open `/mcps`, select `whop`, and press `i`.
 
+**Any other tool**
+
+```
+npx plugins add whopio/plugins
+```
+
+The [`plugins`](https://github.com/vercel-labs/plugins) installer finds the agent
+tools on your machine (Cursor, VS Code, GitHub Copilot CLI, Kimi Code and others) and
+installs the generic build into each. Then ask your agent to run the `whop-connect`
+skill.
+
 The first Whop tool call opens a browser for Whop sign-in.
 
 ## Supported clients
@@ -26,6 +37,7 @@ The first Whop tool call opens a browser for Whop sign-in.
 | --- | --- | --- |
 | Claude Code | Shipped (application pending) | `.claude-plugin/marketplace.json` |
 | Grok Build | PR pending | [`clients/grok/`](clients/grok/) |
+| Any tool the `plugins` installer supports | Built, not yet tried in each tool | `.plugin/marketplace.json` |
 
 ## What the Whop plugin is
 
@@ -49,6 +61,7 @@ clients/<client>/                Everything that differs per client
   skills/                          Client-specific skills (overrides shared by name)
 dist/<client>/whop/              AUTO-GENERATED
 .claude-plugin/marketplace.json   Claude marketplace, sources ./dist/claude/whop
+.plugin/marketplace.json          Marketplace for `npx plugins add`, sources ./dist/generic/whop
 scripts/build.sh                  Compose dist/ from shared/ + clients/
 scripts/validate.sh               Structure, JSON, and dist/-freshness checks
 ```

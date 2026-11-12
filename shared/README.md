@@ -13,6 +13,10 @@ The official Whop plugin connects {{CLIENT_NAME}} to your Whop business through 
 {{else}}
 1. Install the plugin and restart {{CLIENT_NAME}}.
 {{/if}}
+{{#if generic}}
+   `npx plugins add whopio/plugins` installs it into every supported tool it finds
+   on your machine.
+{{/if}}
 2. Run {{CONNECT_COMMAND}}. The first Whop tool call opens your browser so you can sign in to Whop and approve access.
 3. Describe what you want, for example "create a $20/month membership and give me the checkout link" or "show me last week's revenue".
 

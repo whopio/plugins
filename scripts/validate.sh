@@ -15,18 +15,26 @@ while IFS= read -r f; do
   fi
 done < <(find . -name '*.json' -not -path './node_modules/*' -not -path './.git/*' | sort)
 
-echo "Validating marketplace…"
+echo "Validating marketplaces…"
 if python3 - <<'PY'
 import json, os, sys
 
-mp = json.load(open(".claude-plugin/marketplace.json"))
 problems = []
 
-for field in ("name", "owner", "plugins"):
-    if field not in mp:
-        problems.append(f"marketplace.json missing required field: {field}")
+# Each marketplace file, and the manifest directory its plugins must carry.
+# Claude Code reads .claude-plugin/; `npx plugins add` reads .plugin/ first.
+MARKETPLACES = [(".claude-plugin", ".claude-plugin"), (".plugin", ".plugin")]
 
-for entry in mp.get("plugins", []):
+entries = []
+for mp_dir, manifest_dir in MARKETPLACES:
+    mp_path = os.path.join(mp_dir, "marketplace.json")
+    mp = json.load(open(mp_path))
+    for field in ("name", "owner", "plugins"):
+        if field not in mp:
+            problems.append(f"{mp_path} missing required field: {field}")
+    entries += [(manifest_dir, e) for e in mp.get("plugins", [])]
+
+for manifest_dir, entry in entries:
     name, src = entry.get("name"), entry.get("source")
     if not name or not src:
         problems.append(f"plugin entry missing name or source: {entry}")
@@ -36,7 +44,7 @@ for entry in mp.get("plugins", []):
         problems.append(f"{name}: source directory not found: {root}")
         continue
 
-    manifest = os.path.join(root, ".claude-plugin", "plugin.json")
+    manifest = os.path.join(root, manifest_dir, "plugin.json")
     if not os.path.isfile(manifest):
         problems.append(f"{name}: missing {manifest}")
     else:
@@ -52,11 +60,11 @@ for entry in mp.get("plugins", []):
                 f"vs marketplace {entry.get('version')!r}"
             )
 
-    # Components must sit at the plugin root, never inside .claude-plugin/
+    # Components must sit at the plugin root, never inside the manifest directory
     for comp in ("skills", "commands", "agents", "hooks", ".mcp.json"):
-        stray = os.path.join(root, ".claude-plugin", comp)
+        stray = os.path.join(root, manifest_dir, comp)
         if os.path.exists(stray):
-            problems.append(f"{name}: {comp} must be at the plugin root, not in .claude-plugin/")
+            problems.append(f"{name}: {comp} must be at the plugin root, not in {manifest_dir}/")
 
     skills = os.path.join(root, "skills")
     if os.path.isdir(skills):

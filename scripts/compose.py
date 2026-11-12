@@ -19,6 +19,10 @@ Markdown may also hold per-client blocks, each marker on its own line:
   {{/if}}
 
 Blocks do not nest. An unclosed or stray marker is a hard error.
+
+A client may set "sameBlocksAs" in client.json to a list of other clients. It then
+also keeps every block written for those clients. The generic client uses this to
+take the same text as Grok, which is on the same MCP route.
 """
 
 import json
@@ -31,7 +35,7 @@ TOKEN_RE = re.compile(r"\{\{([A-Z0-9_]+)\}\}")
 IF_RE = re.compile(r"^\{\{#if ([a-z0-9_,]+)\}\}$")
 
 
-def select_blocks(text: str, client: str, where: Path) -> str:
+def select_blocks(text: str, clients: set, where: Path) -> str:
     out, state = [], None  # state: None, or True/False = keep current branch
     for n, line in enumerate(text.splitlines(keepends=True), 1):
         marker = line.strip()
@@ -39,7 +43,7 @@ def select_blocks(text: str, client: str, where: Path) -> str:
         if m:
             if state is not None:
                 raise SystemExit(f"error: {where}:{n}: nested {{{{#if}}}}")
-            state = client in m.group(1).split(",")
+            state = bool(clients & set(m.group(1).split(",")))
         elif marker == "{{else}}":
             if state is None:
                 raise SystemExit(f"error: {where}:{n}: {{{{else}}}} outside a block")
@@ -65,21 +69,21 @@ def render(text: str, tokens: dict, where: Path) -> str:
     return TOKEN_RE.sub(sub, text)
 
 
-def render_file(path: Path, tokens: dict) -> str:
+def render_file(path: Path, tokens: dict, clients: set) -> str:
     text = path.read_text()
     if path.suffix.lower() == ".md":
-        text = select_blocks(text, tokens["CLIENT_KEY"], path)
+        text = select_blocks(text, clients, path)
     return render(text, tokens, path)
 
 
-def copy_tree(src: Path, dst: Path, tokens: dict) -> None:
+def copy_tree(src: Path, dst: Path, tokens: dict, clients: set) -> None:
     for path in sorted(src.rglob("*")):
         if not path.is_file():
             continue
         target = dst / path.relative_to(src)
         target.parent.mkdir(parents=True, exist_ok=True)
         if path.suffix.lower() in (".md", ".json"):
-            target.write_text(render_file(path, tokens), encoding="utf-8")
+            target.write_text(render_file(path, tokens, clients), encoding="utf-8")
         else:
             shutil.copy2(path, target)
 
@@ -94,12 +98,13 @@ def main() -> None:
         "DISPLAY_NAME": cfg["displayName"],
         **cfg.get("tokens", {}),
     }
+    clients = {client, *cfg.get("sameBlocksAs", [])}
 
-    copy_tree(Path("shared/skills"), out / "skills", tokens)
+    copy_tree(Path("shared/skills"), out / "skills", tokens, clients)
 
     client_skills = Path(f"clients/{client}/skills")
     if client_skills.is_dir():
-        copy_tree(client_skills, out / "skills", tokens)
+        copy_tree(client_skills, out / "skills", tokens, clients)
 
     mcp_src = Path("shared/mcp.json")
     mcp_dst = out / cfg["mcpConfigPath"]
@@ -118,10 +123,10 @@ def main() -> None:
         json.dump(ordered, f, indent=2, ensure_ascii=False)
         f.write("\n")
 
-    copy_tree(Path("shared/assets"), out / "assets", tokens)
+    copy_tree(Path("shared/assets"), out / "assets", tokens, clients)
 
     readme_src = Path("shared/README.md")
-    (out / "README.md").write_text(render_file(readme_src, tokens), encoding="utf-8")
+    (out / "README.md").write_text(render_file(readme_src, tokens, clients), encoding="utf-8")
 
 
 if __name__ == "__main__":
