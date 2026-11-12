@@ -4,9 +4,7 @@ The official Whop plugin connects your agent to your Whop business through the h
 
 ## Getting started
 
-1. Install the plugin and restart your agent.
-   `npx plugins add whopio/plugins` installs it into every supported tool it finds
-   on your machine.
+1. Install the plugin with `npx plugins add whopio/plugins`, which adds it to every supported tool it finds on your machine. Then restart the tool.
 2. Run the `whop-connect` skill. The first Whop tool call opens your browser so you can sign in to Whop and approve access.
 3. Describe what you want, for example "create a $20/month membership and give me the checkout link" or "show me last week's revenue".
 

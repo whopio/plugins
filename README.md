@@ -1,6 +1,8 @@
 # Whop plugins
 
-Official Whop plugin for whatever AI agent you use. Works with Claude Code and Grok Build, and installs into other agent tools with one command.
+Official Whop plugin for whatever AI agent you use. Works with Claude Code and Grok Build,
+installs into other agent tools with one command, and has a ChatGPT and Codex build that
+is not submitted yet.
 
 ## Install
 
@@ -29,7 +31,13 @@ tools on your machine (Cursor, VS Code, GitHub Copilot CLI, Kimi Code and others
 installs the generic build into each. Then ask your agent to run the `whop-connect`
 skill.
 
-The first Whop tool call opens a browser for Whop sign-in.
+**ChatGPT and Codex**
+
+Not listed yet. Once it is, install Whop from the Plugins directory and connect it when
+asked; reconnect later from the plugin's settings. In Codex, `$whop:whop-connect` checks the
+connection.
+
+Everywhere but ChatGPT and Codex, the first Whop tool call opens a browser for Whop sign-in.
 
 ## Supported clients
 
@@ -38,15 +46,17 @@ The first Whop tool call opens a browser for Whop sign-in.
 | Claude Code | Shipped (application pending) | `.claude-plugin/marketplace.json` |
 | Grok Build | PR pending | [`clients/grok/`](clients/grok/) |
 | Any tool the `plugins` installer supports | Built, not yet tried in each tool | `.plugin/marketplace.json` |
+| ChatGPT and Codex | Built, not submitted (needs `https://mcp.whop.com/chatgpt/mcp`) | [`clients/openai/`](clients/openai/), uploaded as a ZIP at platform.openai.com/plugins |
 
 ## What the Whop plugin is
 
 | Component | Source | What it does |
 | --- | --- | --- |
-| MCP config | `shared/mcp.json` | Points the client at its Whop MCP endpoint (`MCP_URL` in `clients/<client>/client.json`). Claude uses `https://mcp.whop.com/claude/mcp`, which leaves out AI media generation and money-out tools. You sign in through the browser. |
+| MCP config | `shared/mcp.json` (`clients/openai/mcp.json` for ChatGPT) | Points the client at its Whop MCP endpoint (`MCP_URL` in `clients/<client>/client.json`). Claude uses `https://mcp.whop.com/claude/mcp`, which leaves out AI media generation and money-out tools. ChatGPT will use `https://mcp.whop.com/chatgpt/mcp`, which serves AI media but leaves out issuing refunds, one-off charges to customers, payouts and other money movement, identity verification, and credentials; its skill gets a yes before anything that costs money or goes live. You sign in through the browser. |
 | `whop` skill | `shared/skills/whop/` | The entry point: checks the connection, picks the business, and points to the skill for the job. |
 | Job skills | `shared/skills/whop-payments/`, `whop-products/`, `whop-customers/`, `whop-courses/`, `whop-community/`, `whop-stats/` | One per job. Each covers the tools the MCP server lists by name for that job, the order to call them in, and what to confirm with the user first. |
 | `whop-docs-and-operations` skill | `shared/skills/whop-docs-and-operations/` | How to search the Whop docs and how to find and run every operation the server does not list by name, with guides for websites, ads, and company formation. |
+| ChatGPT `whop` skill | `clients/openai/skills/whop/` | ChatGPT and Codex do not get the job skills yet. They get one skill that lists every command group and which tool starts each job, with guides for websites, ads, and company formation. |
 | `whop-connect` command | `clients/<client>/skills/whop-connect/` | Checks you are signed in, then names the account and what it can reach. Written once per client, because each names its menus differently. |
 
 ## Repository layout
@@ -58,12 +68,14 @@ shared/                          Client-neutral content
   skills/                          whop, whop-* job skills, whop-docs-and-operations (+ references)
 clients/<client>/                Everything that differs per client
   client.json                      Manifest overrides, output paths, {{TOKEN}} values
-  skills/                          Client-specific skills (overrides shared by name)
+  skills/                          Client-specific skill files (override shared files by path)
 dist/<client>/whop/              AUTO-GENERATED
 .claude-plugin/marketplace.json   Claude marketplace, sources ./dist/claude/whop
 .plugin/marketplace.json          Marketplace for `npx plugins add`, sources ./dist/generic/whop
 scripts/build.sh                  Compose dist/ from shared/ + clients/
 scripts/validate.sh               Structure, JSON, and dist/-freshness checks
+scripts/check_openai_plugin.py    Offline check of an OpenAI plugin ZIP or folder
+scripts/package-openai.py         Zip dist/openai/whop for platform.openai.com/plugins
 ```
 
 ## Working on it
@@ -71,7 +83,9 @@ scripts/validate.sh               Structure, JSON, and dist/-freshness checks
 ```sh
 ./scripts/build.sh            # rebuild every client into dist/
 ./scripts/build.sh grok       # rebuild one
+pip install pyyaml            # needed by the OpenAI package check
 ./scripts/validate.sh         # structure, JSON, and dist/-freshness
+python3 scripts/package-openai.py ../whop-openai.zip   # OpenAI submission ZIP + strict check
 ```
 
 Edit `shared/` for anything every client should say, and `clients/<client>/` for
@@ -80,7 +94,8 @@ anything only one client should. Then rebuild and commit `dist/`.
 **Adding a client:** create `clients/<name>/client.json` (see an existing one), add any client-specific skills beside it, and run the build. See [clients/README.md](clients/README.md).
 
 Bump `version` in `shared/plugin.base.json` whenever you change the plugin so installed
-users get updates.
+users get updates. The OpenAI build has its own `version` in `clients/openai/client.json`:
+bump it for every OpenAI upload, which leaves the Claude and Grok outputs alone.
 
 ## License
 

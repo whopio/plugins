@@ -1,1 +1,4 @@
 dist/** linguist-generated=true
+# The OpenAI build is written with LF on every platform (clients/openai/client.json
+# lineEndings), and OpenAI's SKILL.md parser needs '---\n'. Claude and Grok are untouched.
+dist/openai/** text=auto eol=lf

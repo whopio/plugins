@@ -86,6 +86,27 @@ else
   err "dist/ is stale — run ./scripts/build.sh and commit the result"
 fi
 
+echo "Validating the OpenAI package (dist/openai/whop)…"
+# Draft mode: the placeholder demo URL and TODO markers are warnings here, so Claude
+# and Grok releases are not blocked. scripts/package-openai.py runs the strict check.
+if [ -d dist/openai/whop ]; then
+  if python3 -c "import yaml" 2>/dev/null; then
+    report="$(mktemp)"
+    trap 'rm -f "$report"' EXIT
+    if python3 scripts/check_openai_plugin.py dist/openai/whop \
+         --expect-origin https://mcp.whop.com --expect-url https://mcp.whop.com/chatgpt/mcp --surface clients/openai/surface.json --draft >"$report"; then
+      echo "  ✓ $(tail -1 "$report")"
+    else
+      { grep '^ERROR' "$report" || true; } | sed 's/^/  /'
+      err "dist/openai/whop fails the OpenAI package check"
+    fi
+    rm -f "$report"
+  else
+    echo "  ! skipped: PyYAML is not installed (pip install pyyaml)"
+    openai_skipped=1
+  fi
+fi
+
 echo "Validating skill frontmatter…"
 while IFS= read -r f; do
   if [ "$(head -1 "$f")" != "---" ]; then
@@ -103,4 +124,8 @@ if [ "$fail" -ne 0 ]; then
   exit 1
 fi
 echo
-echo "All checks passed."
+if [ -n "${openai_skipped:-}" ]; then
+  echo "All checks passed (OpenAI package check SKIPPED: pip install pyyaml)."
+else
+  echo "All checks passed."
+fi
