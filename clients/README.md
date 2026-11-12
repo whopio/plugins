@@ -70,8 +70,10 @@ has been run end to end yet.
 Things the installer does that are easy to miss:
 
 - For Claude Code and Cursor it writes to the same place, `~/.claude/plugins`, under
-  the marketplace name `whop`. Someone who already added the Claude marketplace gets
-  that copy replaced by the generic build, with updates from GitHub turned off.
+  the marketplace's name. The generic marketplace is named `whop-plugin` and the
+  Claude one `whop`, so the generic build installs as `whop@whop-plugin` and leaves
+  an existing `whop@whop` alone. Keep the two names different. Someone with both
+  has two copies of the plugin enabled and should remove one.
 - For Codex it installs the generic build as `whop@plugins-cli`, not the ChatGPT
   build.
 - Do not add `.claude-plugin/plugin.json` to the generic build. With it, the
