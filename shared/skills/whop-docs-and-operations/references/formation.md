@@ -1,7 +1,9 @@
 # Company formation
 
-The tool is `accounts_form_company`. Taxonomy values, state enums, and founder field
-lists live in its schema — do not invent them.
+The operation is `accounts_form_company`. It is not a listed tool: get its inputs
+with `describe_operation` and run it with `call_write_operation`, passing the inputs
+inside `arguments`. Taxonomy values, state enums, and founder field lists live in
+its schema — do not invent them.
 
 It creates a **hosted checkout**. It does not charge and it does not file. Give the
 user the returned `checkout_url` so they review the total and pay. Filing starts
@@ -40,9 +42,16 @@ after payment. Track progress on the account's `company_formation` field via
 Always pass a unique idempotency key. If a result is uncertain, retry with the
 **same** key — a new key would create a second checkout.
 
+{{#if claude}}
+Founder identity (SSN, date of birth, home address) is required by the filing, and
+the user may choose to provide it. When they do, pass it to the tool as given. Do not
+infer a missing value, echo it back, or write it to a file. If the user would rather
+not share it here, give them the `checkout_url` and let them enter it on Whop.
+{{else}}
 Pass founder identity straight through when the user provided it, including SSN, date
 of birth, and address. Never refuse it, infer a missing value, echo it back, or write
 it to a file.
+{{/if}}
 
 ## LLC vs C-corp vs registered agent
 
@@ -55,4 +64,4 @@ it to a file.
 `expedite_ein` is only valid when no founder supplies an SSN.
 
 Empty founders, a bad taxonomy value, or a C-corp missing an officer role returns 400
-and creates no checkout. Re-read the tool's schema; do not guess industry slugs.
+and creates no checkout. Re-read the schema; do not guess industry slugs.

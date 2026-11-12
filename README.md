@@ -32,7 +32,9 @@ The first Whop tool call opens a browser for Whop sign-in.
 | Component | Source | What it does |
 | --- | --- | --- |
 | MCP config | `shared/mcp.json` | Points the client at its Whop MCP endpoint (`MCP_URL` in `clients/<client>/client.json`). Claude uses `https://mcp.whop.com/claude/mcp`, which leaves out AI media generation and money-out tools. You sign in through the browser. |
-| `whop` skill | `shared/skills/whop/` | Lists every command group and which tool starts each job, and adds guides for websites, ads, and company formation. |
+| `whop` skill | `shared/skills/whop/` | The entry point: checks the connection, picks the business, and points to the skill for the job. |
+| Job skills | `shared/skills/whop-payments/`, `whop-products/`, `whop-customers/`, `whop-courses/`, `whop-community/`, `whop-stats/` | One per job. Each covers the tools the MCP server lists by name for that job, the order to call them in, and what to confirm with the user first. |
+| `whop-docs-and-operations` skill | `shared/skills/whop-docs-and-operations/` | How to search the Whop docs and how to find and run every operation the server does not list by name, with guides for websites, ads, and company formation. |
 | `whop-connect` command | `clients/<client>/skills/whop-connect/` | Checks you are signed in, then names the account and what it can reach. Written once per client, because each names its menus differently. |
 
 ## Repository layout
@@ -41,7 +43,7 @@ The first Whop tool call opens a browser for Whop sign-in.
 shared/                          Client-neutral content
   mcp.json                         MCP server config
   plugin.base.json                 Manifest fields common to every client
-  skills/                          whop (+ references)
+  skills/                          whop, whop-* job skills, whop-docs-and-operations (+ references)
 clients/<client>/                Everything that differs per client
   client.json                      Manifest overrides, output paths, {{TOKEN}} values
   skills/                          Client-specific skills (overrides shared by name)

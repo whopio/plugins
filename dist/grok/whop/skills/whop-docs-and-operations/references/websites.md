@@ -1,7 +1,10 @@
 # Websites and apps (`*.whop.app`)
 
-Read this before creating or deploying an app. Field lists and enums live in each
-tool's own schema — do not invent them.
+Read this before creating or deploying an app.
+
+Every tool named here is an operation, not a listed tool. Get its inputs with
+`describe_operation` and run it with `call_read_operation` or `call_write_operation`,
+passing the inputs inside `arguments`. Do not invent a field or an enum value.
 
 ## Create the app
 
@@ -21,9 +24,7 @@ changing a website back to an app is not a supported move.
 
 ## Deploy
 
-```
-apps_deploy(id: "app_xxx", draft: false)
-```
+Call `apps_deploy` with the app `id` and `draft: true`.
 
 `apps_deploy` **builds the app's current source on Whop and ships it.** Nothing local
 is required to deploy source Whop already holds.
@@ -32,7 +33,7 @@ is required to deploy source Whop already holds.
   reports that run rather than starting a second.
 - Calling it with nothing to publish says so rather than starting a run.
 - `draft: true` uploads the build without making it live. The default deploys and
-  promotes in one step, so ask the user before a non-draft deploy.
+  promotes in one step.
 - It returns the run it started. Follow progress on the app's `deployment` field via
   `apps_get`.
 
@@ -42,11 +43,13 @@ is required to deploy source Whop already holds.
 half with your own tools and the rest over MCP:
 
 1. Write and build the files yourself.
-2. `files_create`, then `files_complete` for the archive. Web takes a JavaScript file
-   or a `.zip` of the hosted site.
+2. Upload the archive: `files_create`, PUT the bytes to the `upload_url` it returns,
+   then poll `files_get` until `upload_status` is `ready`. A multipart upload ends
+   with `files_complete` instead. Web takes a JavaScript file or a `.zip` of the
+   hosted site.
 3. `app-builds_create` referencing the uploaded file — `attachment` takes `{ id }`
    for an existing file or `{ direct_upload_id }` for a completed direct upload.
-4. Ask the user, then `app-builds_promote` to make that build live.
+4. `app-builds_promote` to make that build live.
 
 Promoting an older build rolls back to it.
 

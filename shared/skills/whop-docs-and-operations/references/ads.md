@@ -1,11 +1,19 @@
 # Ads — nothing to a live campaign
 
-Read this before creating or launching ads. Enums and field lists live in each tool's
-own schema — do not invent them.
+Read this before creating or launching ads.
+
+Every tool named here is an operation, not a listed tool. Get its inputs with
+`describe_operation` and run it with `call_read_operation` or `call_write_operation`,
+passing the inputs inside `arguments`. Do not invent a field or an enum value.
 
 Drafts can be created without billing. Launching (`status: "active"`) cannot.
 
 ## Setup
+
+Whop now marks the `social-accounts_*` operations as deprecated in favour of
+`external-accounts_*` (`external-accounts_list`, `external-accounts_connect`,
+`external-accounts_create`). Prefer those, and read each one's schema with
+`describe_operation` first: its inputs may differ from the ones written below.
 
 1. **Auth.** First-time ads billing needs a user login, not an API key — an API key
    can only reorder already-configured payment methods. A scope error saying the
@@ -21,20 +29,31 @@ Drafts can be created without billing. Launching (`status: "active"`) cannot.
      invalid on create; use `facebook`.
 3. **Payment method.** Check `accounts_preferences`. If `ads_payment_methods` is
    null, set `{"primary": {"type": "platform_balance"}}` via
-   `accounts_update-preferences`. To fund the balance, call `deposits_create` and
-   give the user the hosted deposit page it returns — they add the funds there.
-   It does not move money by itself.
+{{#if claude}}
+   `accounts_update-preferences`. This connection has no tool to add funds: ask
+   the user to top up their balance on whop.com, then continue.
+{{else}}
+   `accounts_update-preferences`. Fund with `deposits_create`. A 402 returns a
+   `deposit_url` — give it to the user. A successful deposit's `hosted_url` is the
+   page, not an action link.
+{{/if}}
 
 TikTok uses `social-accounts_connect` with `platform: "tiktok"`. Same authorize-url
 rule.
 
 ## Launch
 
+{{#if claude}}
 1. **Get the creative from the user.** Ads use images or videos the user supplies —
    a file they give you, or one already on their Whop account. This plugin does not
-   generate images. Upload a local file with `files_create`, then
-   `files_complete`; the resulting `file.id` is what `creatives` wants. If the user
-   has no creative yet, ask them for one.
+   generate images. Upload a local file with `files_create`, PUT the bytes to the
+   `upload_url` it returns, and poll `files_get` until `upload_status` is `ready`;
+   that file's `id` is what `creatives` wants. If the user has no creative yet, ask
+   them for one.
+{{else}}
+1. `media_generate` with `type: "image"` and a prompt. Waiting returns `file.id`,
+   which is what `creatives` wants. A 402 means fund first, then retry.
+{{/if}}
 2. `ads_create`:
 
 ```json
@@ -57,9 +76,13 @@ rule.
 }
 ```
 
+{{#if claude}}
 3. **Confirm, then launch.** Show the user the campaign, the budget, and the
    destination URL, and ask whether to launch. Only after a clear yes, call
    `ad-campaigns_update` with `status: "active"`. Launching spends money.
+{{else}}
+3. `ad-campaigns_update` with `status: "active"` when the user has reviewed it.
+{{/if}}
 
 Pass exactly one of `ad_group` or `ad_group_id`. A nested `ad_campaign` object inside
 `ad_group` creates campaign + group + ad in one call — the API description
