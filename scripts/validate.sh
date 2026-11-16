@@ -15,18 +15,37 @@ while IFS= read -r f; do
   fi
 done < <(find . -name '*.json' -not -path './node_modules/*' -not -path './.git/*' | sort)
 
-echo "Validating marketplace…"
+echo "Validating marketplaces…"
 if python3 - <<'PY'
 import json, os, sys
 
-mp = json.load(open(".claude-plugin/marketplace.json"))
 problems = []
 
-for field in ("name", "owner", "plugins"):
-    if field not in mp:
-        problems.append(f"marketplace.json missing required field: {field}")
+# Each marketplace file, and the manifest directory its plugins must carry.
+# Claude Code reads .claude-plugin/. `npx plugins add` reads .plugin/ first, GitHub
+# Copilot CLI reads .github/plugin/ first, and Cursor reads .cursor-plugin/. Those
+# three must stay identical, so every install outside a directory gets one build.
+MARKETPLACES = [
+    (".claude-plugin", ".claude-plugin"),
+    (".plugin", ".plugin"),
+    (".github/plugin", ".plugin"),
+    (".cursor-plugin", ".cursor-plugin"),
+]
 
-for entry in mp.get("plugins", []):
+generic = [open(os.path.join(d, "marketplace.json")).read() for d in (".plugin", ".github/plugin", ".cursor-plugin")]
+if len(set(generic)) != 1:
+    problems.append(".plugin/, .github/plugin/ and .cursor-plugin/ marketplace.json must be identical")
+
+entries = []
+for mp_dir, manifest_dir in MARKETPLACES:
+    mp_path = os.path.join(mp_dir, "marketplace.json")
+    mp = json.load(open(mp_path))
+    for field in ("name", "owner", "plugins"):
+        if field not in mp:
+            problems.append(f"{mp_path} missing required field: {field}")
+    entries += [(manifest_dir, e) for e in mp.get("plugins", [])]
+
+for manifest_dir, entry in entries:
     name, src = entry.get("name"), entry.get("source")
     if not name or not src:
         problems.append(f"plugin entry missing name or source: {entry}")
@@ -36,7 +55,7 @@ for entry in mp.get("plugins", []):
         problems.append(f"{name}: source directory not found: {root}")
         continue
 
-    manifest = os.path.join(root, ".claude-plugin", "plugin.json")
+    manifest = os.path.join(root, manifest_dir, "plugin.json")
     if not os.path.isfile(manifest):
         problems.append(f"{name}: missing {manifest}")
     else:
@@ -52,11 +71,11 @@ for entry in mp.get("plugins", []):
                 f"vs marketplace {entry.get('version')!r}"
             )
 
-    # Components must sit at the plugin root, never inside .claude-plugin/
+    # Components must sit at the plugin root, never inside the manifest directory
     for comp in ("skills", "commands", "agents", "hooks", ".mcp.json"):
-        stray = os.path.join(root, ".claude-plugin", comp)
+        stray = os.path.join(root, manifest_dir, comp)
         if os.path.exists(stray):
-            problems.append(f"{name}: {comp} must be at the plugin root, not in .claude-plugin/")
+            problems.append(f"{name}: {comp} must be at the plugin root, not in {manifest_dir}/")
 
     skills = os.path.join(root, "skills")
     if os.path.isdir(skills):
@@ -78,6 +97,27 @@ else
   err "dist/ is stale — run ./scripts/build.sh and commit the result"
 fi
 
+echo "Validating the OpenAI package (dist/openai/whop)…"
+# Draft mode: the placeholder demo URL and TODO markers are warnings here, so Claude
+# and Grok releases are not blocked. scripts/package-openai.py runs the strict check.
+if [ -d dist/openai/whop ]; then
+  if python3 -c "import yaml" 2>/dev/null; then
+    report="$(mktemp)"
+    trap 'rm -f "$report"' EXIT
+    if python3 scripts/check_openai_plugin.py dist/openai/whop \
+         --expect-origin https://mcp.whop.com --expect-url https://mcp.whop.com/chatgpt/mcp --surface clients/openai/surface.json --draft >"$report"; then
+      echo "  ✓ $(tail -1 "$report")"
+    else
+      { grep '^ERROR' "$report" || true; } | sed 's/^/  /'
+      err "dist/openai/whop fails the OpenAI package check"
+    fi
+    rm -f "$report"
+  else
+    echo "  ! skipped: PyYAML is not installed (pip install pyyaml)"
+    openai_skipped=1
+  fi
+fi
+
 echo "Validating skill frontmatter…"
 while IFS= read -r f; do
   if [ "$(head -1 "$f")" != "---" ]; then
@@ -95,4 +135,8 @@ if [ "$fail" -ne 0 ]; then
   exit 1
 fi
 echo
-echo "All checks passed."
+if [ -n "${openai_skipped:-}" ]; then
+  echo "All checks passed (OpenAI package check SKIPPED: pip install pyyaml)."
+else
+  echo "All checks passed."
+fi

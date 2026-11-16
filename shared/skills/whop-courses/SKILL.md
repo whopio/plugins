@@ -72,12 +72,19 @@ A new or edited lesson is visible to the course's students according to its
 `visibility`, and `experiences_attach` opens the content to every customer of that
 product. Both reach real people, so the user has to have asked for the change.
 
+{{#if openai}}
+Before adding a lesson students can see, editing one, or calling
+`experiences_attach`, say what students or customers will be able to see and wait
+for a yes, even when the user asked for that change. A lesson you create and hide
+at once still needs the yes first, because it is visible in between.
+{{else}}
 - If the user asked for exactly this change (this lesson in this course, this
   course on this product), do it, then say what students or customers can now see.
 - If the change goes beyond what they asked for, tell the user what will change and
   wait for a yes. That covers a lesson they did not name, editing a lesson students
   can already see when they asked for something else, and attaching to a product
   that already has customers when they did not name that product.
+{{/if}}
 
 `course-lessons_update` sets a lesson's `visibility` to `visible` or `hidden` (a
 draft). Its `attachments` input replaces every attachment the lesson already has,
@@ -90,6 +97,11 @@ so include the ones to keep.
 1. `files_create` with the `filename`, extension included. It returns an
    `upload_url`.
 2. Send the file's bytes to `upload_url` with an HTTP PUT, using your own tools.
+{{#if openai}}
+   That needs a workspace where you can read the file and make the request, such as
+   Codex. In a ChatGPT conversation without one, say the file has to be uploaded
+   from Codex or the Whop dashboard.
+{{/if}}
 3. Call `files_get` until `upload_status` is `ready`.
 4. Use the file `id` where a file is accepted, such as a lesson's attachments.
 
