@@ -44,7 +44,7 @@ tool name, a field or an enum value.
 | Build or edit a course, upload a file | `whop-courses` | `experiences_*`, `courses_create`, `course-chapters_*`, `course-lessons_*`, `files_*` |
 | Read or answer chats, DMs, support, forum posts | `whop-community` | `messages_*`, `dm-channels_list`, `support-channels_list`, `forum-posts_*` |
 | See revenue and other metrics over time | `whop-stats` | `stats_time-series_get` |
-| Read the Whop docs, or do anything not listed above (websites, ads, forming a company, webhooks, invoices and more) | `whop-docs-and-operations` | `docs_search`, `docs_query`, `search_operations`, `describe_operation`, `call_read_operation`, `call_write_operation` |
+| Read the Whop docs, or do anything not listed above (websites, ads, forming a company, invoices, affiliates and more) | `whop-docs-and-operations` | `docs_search`, `docs_query`, `search_operations`, `describe_operation`, `call_read_operation`, `call_write_operation` |
 
 Three listed tools belong to no other skill:
 

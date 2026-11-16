@@ -1,7 +1,7 @@
 ---
 name: whop-docs-and-operations
 {{#if claude,grok}}
-description: "Search the Whop documentation and reach every Whop operation that is not a listed tool, through the Whop MCP tools docs_search, docs_query, search_operations, describe_operation, call_read_operation and call_write_operation. Use when the user asks how something on Whop works, when no listed Whop tool fits the job, or for websites on *.whop.app, Meta and TikTok ads, forming an LLC or C-corp, webhooks, invoices, affiliates, checkout links, API keys or anything else in a Whop account. Always use before saying Whop cannot do something."
+description: "Search the Whop documentation and reach every Whop operation that is not a listed tool, through the Whop MCP tools docs_search, docs_query, search_operations, describe_operation, call_read_operation and call_write_operation. Use when the user asks how something on Whop works, when no listed Whop tool fits the job, or for websites on *.whop.app, Meta and TikTok ads, forming an LLC or C-corp, invoices, affiliates, checkout links, API keys or anything else in a Whop account. Always use before saying Whop cannot do something."
 {{/if}}
 {{#if openai}}
 description: "Search the Whop documentation with docs_search and docs_query, and find the right Whop MCP tool for a job no other Whop skill covers. Use when the user asks how something on Whop works, or for websites on *.whop.site, Whop Ads, forming an LLC or C-corp, domains, affiliates, automations or anything else in a Whop account. Always use before saying Whop cannot do something."
@@ -52,7 +52,7 @@ docs say, not from memory: Whop changes often. If the docs do not answer it, say
 | `call_write_operation` | Run an operation that creates, changes or deletes |
 
 1. **Search.** `search_operations` with the task in plain words: "list my
-   webhooks", "create a checkout link". It returns up to 10 matches (`limit` goes
+   invoices", "create a checkout link". It returns up to 10 matches (`limit` goes
    to 25), each with `name`, `summary`, `read_only`, `destructive` and `call_with`,
    the tool to run it with. The top 3 also carry their full `input_schema`.
 2. **Read the schema.** If the one you want is not in the top 3, call
@@ -62,7 +62,7 @@ docs say, not from memory: Whop changes often. If the docs do not answer it, say
    returned and the inputs inside `arguments`:
 
    ```json
-   { "name": "webhooks_list", "arguments": { "account_id": "biz_xxx" } }
+   { "name": "invoices_list", "arguments": { "account_id": "biz_xxx" } }
    ```
 
    A read sent to `call_write_operation`, or a write sent to `call_read_operation`,
