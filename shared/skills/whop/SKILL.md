@@ -31,7 +31,7 @@ find it with `search_operations` and run it with `call_read_operation` or
 the job. The `whop-docs-and-operations` skill covers this.
 
 Tool names follow `<group>_<operation>`, with hyphens inside a multi-word group
-(`support-channels_list`). Read a tool's schema before calling it. Never invent a
+(`course-lessons_get`). Read a tool's schema before calling it. Never invent a
 tool name, a field or an enum value.
 
 ## Which skill to load
@@ -42,7 +42,7 @@ tool name, a field or an enum value.
 | Create or change products, prices, promo codes, checkout links | `whop-products` | `products_*`, `variants_*`, `promo-codes_create` |
 | Look up customers, check or cancel a membership | `whop-customers` | `members_list`, `memberships_*`, `events_list` |
 | Build or edit a course, upload a file | `whop-courses` | `experiences_*`, `courses_create`, `course-chapters_*`, `course-lessons_*`, `files_*` |
-| Read or answer chats, DMs, support, forum posts | `whop-community` | `messages_*`, `dm-channels_list`, `support-channels_list`, `forum-posts_*` |
+| Read or answer chats, DMs, support, forum posts | `whop-community` | `messages_*`, `channels_list`, `forum-posts_*` |
 | See revenue and other metrics over time | `whop-stats` | `stats_time-series_get` |
 | Read the Whop docs, or do anything not listed above (websites, ads, forming a company, invoices, affiliates and more) | `whop-docs-and-operations` | `docs_search`, `docs_query`, `search_operations`, `describe_operation`, `call_read_operation`, `call_write_operation` |
 

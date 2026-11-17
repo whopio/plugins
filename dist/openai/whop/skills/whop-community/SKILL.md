@@ -45,7 +45,21 @@ or leave it out for a new top-level post. `experience_id: "public"` together wit
 (`paywall_amount`) must have a `title`, because the title stays visible to people
 who have not paid.
 
-Both go to real people the moment they are called.
+Forum posts have two traps. `forum-posts_create` pins with `pinned`, while the
+update operation uses `is_pinned`. And `experience_id: "public"` is only for the
+public forum: never use it as a shortcut for something meant for paying members.
+
+### Sending to several people
+
+- Send in small batches of about 10, and keep each recipient's result. Report who
+  failed and why. Some sent is not "sent to everyone".
+- Whop limits how fast a user can send, roughly 10 messages in 10 seconds, and
+  limits how many new DMs can be started in a day. The exact numbers can change.
+- A send that hits the limit can come back as a not-found error. The message was
+  not sent and the person or channel is not missing. Stop the batch, wait, then
+  send to the ones skipped.
+
+Both tools go to real people the moment they are called.
 
 - Show the user the exact text and where it will go, and wait for a yes.
 - Never send the same message to many customers in a loop unless the user asked for

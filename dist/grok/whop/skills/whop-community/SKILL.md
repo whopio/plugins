@@ -12,8 +12,7 @@ conversation, do the steps in the `whop` skill first.
 
 | Tool | Use it to |
 | --- | --- |
-| `support-channels_list` | See customer support conversations, most recently active first |
-| `dm-channels_list` | See the user's DM inbox |
+| `channels_list` | See support conversations, DMs and community chats |
 | `messages_list` | Read the messages in one conversation |
 | `messages_get` | Read one message |
 | `messages_create` | Send a message |
@@ -22,10 +21,19 @@ conversation, do the steps in the `whop` skill first.
 
 ## Reading
 
-1. Find the conversation. `support-channels_list` with `open: true` returns the
-   ones still waiting for a reply. When the user names a business, pass its
-   `account_id`; without it the list mixes in every other business the user can
-   reach. `dm-channels_list` returns the DM inbox.
+1. Find the conversation with `channels_list`. `kind` is required.
+   - A business's support inbox: `kind: ["support"]`, its `account_id` and
+     `support_role: "staff"`. Add `status: "unresolved"` for the open ones, or
+     `awaiting_reply: true` for those where the customer wrote last. Without
+     `support_role: "staff"` the list returns support chats the user opened as a
+     customer.
+   - The user's DMs: `kind: ["private"]`.
+   - `query` matches a channel's name, or a member's name or username.
+
+   If `channels_list` is not among the listed tools, this server still has the
+   older pair: `support-channels_list` (with `account_id`, and `open: true` for the
+   ones waiting for a reply) and `dm-channels_list`. Read their schemas and use
+   them instead.
 2. Read it with `messages_list` and the `channel_id`. For a community chat, the
    chat's experience id works as the `channel_id`.
 
@@ -45,7 +53,36 @@ or leave it out for a new top-level post. `experience_id: "public"` together wit
 (`paywall_amount`) must have a `title`, because the title stays visible to people
 who have not paid.
 
-Both go to real people the moment they are called.
+Forum posts have two traps. `forum-posts_create` pins with `pinned`, while the
+update operation uses `is_pinned`. And `experience_id: "public"` is only for the
+public forum: never use it as a shortcut for something meant for paying members.
+
+### Starting a DM
+
+A DM is a private channel between user ids (`user_…`). When the user gives a name,
+username or email, look the person up first (`members_list` for a customer, or the
+"list users" operation) and use the id it returns. If several people match, ask
+which one. Then run the `channels_create` operation with `kind: "private"` and
+`participant_user_ids`. It returns the existing conversation when there is one, so
+it is safe to call, and you send to the channel id it returns.
+
+A message for a whole community chat goes to the chat's experience id. Do not
+create a private channel for it.
+
+A DM to a customer is not a Resolution Center case and does not bring in Whop
+staff.
+
+### Sending to several people
+
+- Send in small batches of about 10, and keep each recipient's result. Report who
+  failed and why. Some sent is not "sent to everyone".
+- Whop limits how fast a user can send, roughly 10 messages in 10 seconds, and
+  limits how many new DMs can be started in a day. The exact numbers can change.
+- A send that hits the limit can come back as a not-found error. The message was
+  not sent and the person or channel is not missing. Stop the batch, wait, then
+  send to the ones skipped.
+
+Both tools go to real people the moment they are called.
 
 - Show the user the exact text and where it will go, and wait for a yes.
 - Never send the same message to many customers in a loop unless the user asked for
@@ -56,5 +93,6 @@ Both go to real people the moment they are called.
 
 ## Not listed here
 
-Editing, deleting, pinning or reacting to a message, starting a new DM or support
-conversation, and editing a forum post are reached through `search_operations`.
+Editing, deleting, pinning or reacting to a message, opening a support
+conversation, marking one resolved, editing a forum post, and changing who can post
+or comment in a forum are reached through `search_operations`.

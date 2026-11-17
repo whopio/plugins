@@ -53,6 +53,10 @@ Each step needs the id the step before returns.
    product's customers can open it. Until then no customer has access. It gives
    access to the whole experience: every course in it, now and later.
 
+When adding to an existing course, list the chapters or lessons already there
+first, so the new one lands where the user wants it. Have a lesson's real content
+ready before creating it: it is visible from the first moment, not an empty draft.
+
 To edit an existing course you need its ids.
 Listing courses, chapters and lessons is not a listed tool: find them with
 `search_operations` ("list courses", "list course lessons") and run them with
@@ -71,11 +75,33 @@ product. Both reach real people, so the user has to have asked for the change.
   can already see when they asked for something else, and attaching to a product
   that already has customers when they did not name that product.
 
+An experience with `is_public: true` is open to anyone, whatever product it is
+attached to. Never make an experience public to get around access to paid content,
+and check an existing experience's setting before reusing it for something paid.
+
 `course-lessons_update` sets a lesson's `visibility` to `visible` or `hidden` (a
 draft). Its `attachments` input replaces every attachment the lesson already has,
 so include the ones to keep.
 
 `course-chapters_update` only renames a chapter.
+
+## Student progress
+
+Being enrolled and finishing a lesson are different facts. Enrollment and overall
+progress come from the course's student list; whether one lesson was started or
+completed comes from lesson interactions, filtered by `course_id`, `lesson_id` or
+`user_id`.
+Find both with `search_operations` ("list course students", "list course lesson
+interactions") and run them with `call_read_operation`.
+
+## Courses missing from the Courses app
+
+When a user says their courses are gone, the courses are usually intact but
+attached to an old Courses app that was deleted or replaced. List the business's
+courses with its `account_id` to confirm, and check `experiences_list` for a
+Courses app. No tool moves a course. The user moves each one back in the
+dashboard: open the Courses app (adding one first if there is none), then use
+**Add modules from other courses** under the course grid.
 
 ## Uploading a file
 

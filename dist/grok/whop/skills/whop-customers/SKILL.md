@@ -33,6 +33,14 @@ conversation, do the steps in the `whop` skill first.
   id first.
 - For "is this person still a member?", list their memberships and read the status.
 
+- A member, a membership and a payment are three records. Check the one the
+  question is about instead of inferring it from another: an active member can hold
+  a canceled membership, and a paid payment does not prove current access.
+- To go from an email to memberships, search `members_list` with the email as
+  `query`, take the user id from the match, then call `memberships_list` with that
+  `user_id`. Check canceled and expired statuses too when looking for a past
+  customer.
+
 Member records hold contact details. Show only what the user asked for.
 
 ## Cancelling a membership
@@ -46,6 +54,28 @@ Member records hold contact details. Show only what the user asked for.
 Ask the user which of the two they want before calling it, name the customer and
 the product, and wait for a yes. If the user also wants the customer's money back,
 that is a separate refund in `whop-payments`.
+
+## Bringing a membership back
+
+Which of these applies depends on the membership's status and whether its price is
+recurring, so call `memberships_get` first.
+
+| Situation | What works |
+| --- | --- |
+| Set to cancel, paid period still running | Undo the cancellation: `cancel_at_period_end: false` |
+| Recurring membership already ended | Nothing restores it. The customer buys again through a checkout link |
+| One-time purchase, `canceled` or `expired` | Reactivate it. `days` (1 to 1095) sets how long access lasts from now; leave it out for lifetime access or to keep an expiry that is still ahead |
+| Past due | Adding free days only moves the next renewal date. The membership stays past due and access does not come back until the renewal is paid. See "Failed renewals" in `whop-payments` |
+| Billing should stop for a while | Pause it, with `until` for a set end date, and resume it later |
+
+Reactivating refuses a subscription, and extending fails on a canceled or expired
+membership. Never tell a customer that free days restored their access.
+
+These are the operations `memberships_update`, `memberships_reactivate`,
+`memberships_extend`, `memberships_pause` and `memberships_resume`. Read each one's
+inputs with `describe_operation` and run it with `call_write_operation`. Each
+changes a customer's access or billing, so name the customer and the product and
+wait for a yes.
 
 ## One person's activity
 

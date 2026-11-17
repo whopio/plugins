@@ -60,6 +60,20 @@ For totals and trends, do not add up pages of `payments_list`. Use `whop-stats`.
 Before calling it, tell the user the payment, the buyer, the amount and those
 effects, and wait for a yes. A refund cannot be undone from here.
 
+Read the payment first. When it shows `refundable: false`, Whop will not refund it
+from here: say so, and that the reason is not given, instead of trying.
+
+A refund is paid out of the business's balance in the payment's currency: its
+available and pending money, never its reserve. Read that balance with
+`accounts_get` first.
+
+- If the balance covers the payment, refund it whole.
+- If it covers only part, tell the user the most that can be refunded now and offer
+  that as a `partial_amount`. The rest waits until more money settles or comes in.
+- If it is zero or less, say nothing can be refunded yet.
+- If a refund fails for lack of funds, do not retry the same amount. The available
+  figure can include money on a Whop Card that a refund cannot use.
+
 Pass an `idempotency_key`. If the result is unclear, check `refunds_list` with the
 `payment_id` before trying again, and reuse the same key.
 {{else}}
@@ -70,6 +84,38 @@ You can still show what was already refunded with `refunds_list`.
 
 `refunds_list` filters by exactly one of `payment_id`, `account_id` or `user_id`.
 They cannot be combined.
+
+## Failed renewals
+
+A renewal that fails moves the membership to `past_due`. Find the failed payment
+with `payments_list` and the `membership_id`.
+
+- Whop retries by itself: up to 3 attempts in all, or up to 7 when the card lacked
+  funds, within 14 days of the first attempt. Some declines are never retried.
+- For when the next attempt happens, give only that payment's
+  `next_payment_attempt_at`. When it is null, no automatic retry is coming.
+- While past due, the member has no access, unless the business turned on **Keep
+  access while past due** or the membership is billed by invoice.
+- When the attempts run out the membership is canceled, unless the business turned
+  off **Cancel subscriptions after failed payments**. Both settings are in the Whop
+  dashboard under Settings → Checkout → Subscriptions. Turning the second one off
+  does not bring back memberships already canceled.
+- A canceled subscription cannot be retried, extended or reactivated. The customer
+  buys again through a checkout link.
+- The customer can pay sooner by choosing a different card on their own Whop
+  orders page; switching cards retries the renewal at once.
+
+{{#if claude,grok}}
+The user can retry a failed payment by hand once, when the payment shows
+`retryable: true` and the membership is active, trialing or past due. That is the
+`payments_retry` operation, run through `call_write_operation`. It charges the
+customer's card, so name the customer and the amount and wait for a yes. Read the
+payment back afterwards. An unclear error does not prove nothing was charged.
+{{/if}}
+{{#if openai}}
+This connection cannot retry a payment. The user retries it from their Whop
+dashboard.
+{{/if}}
 
 ## Disputes and buyer complaints
 

@@ -43,6 +43,29 @@ You can still show what was already refunded with `refunds_list`.
 `refunds_list` filters by exactly one of `payment_id`, `account_id` or `user_id`.
 They cannot be combined.
 
+## Failed renewals
+
+A renewal that fails moves the membership to `past_due`. Find the failed payment
+with `payments_list` and the `membership_id`.
+
+- Whop retries by itself: up to 3 attempts in all, or up to 7 when the card lacked
+  funds, within 14 days of the first attempt. Some declines are never retried.
+- For when the next attempt happens, give only that payment's
+  `next_payment_attempt_at`. When it is null, no automatic retry is coming.
+- While past due, the member has no access, unless the business turned on **Keep
+  access while past due** or the membership is billed by invoice.
+- When the attempts run out the membership is canceled, unless the business turned
+  off **Cancel subscriptions after failed payments**. Both settings are in the Whop
+  dashboard under Settings → Checkout → Subscriptions. Turning the second one off
+  does not bring back memberships already canceled.
+- A canceled subscription cannot be retried, extended or reactivated. The customer
+  buys again through a checkout link.
+- The customer can pay sooner by choosing a different card on their own Whop
+  orders page; switching cards retries the renewal at once.
+
+This connection cannot retry a payment. The user retries it from their Whop
+dashboard.
+
 ## Disputes and buyer complaints
 
 `disputes_list` and `resolution-center-cases_list` only read. Without `account_id`,
