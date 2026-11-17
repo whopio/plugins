@@ -1,0 +1,16 @@
+{
+  "client": "generic",
+  "displayName": "AI agents",
+  "manifestPath": ".plugin/plugin.json",
+  "mcpConfigPath": ".mcp.json",
+  "extraManifestPaths": [".cursor-plugin/plugin.json"],
+  "sameBlocksAs": ["grok"],
+  "tokens": {
+    "CLIENT_NAME": "your agent",
+    "CONNECT_COMMAND": "the `whop-connect` skill",
+    "MCP_URL": "https://mcp.whop.com/mcp"
+  },
+  "manifest": {
+    "description": "Official Whop integration (MCP Server + Skills). Sign in with your Whop account to launch websites, create products and memberships with checkout links, accept payments and manage refunds, payouts, and disputes, run Meta and TikTok ads, form an LLC or C-corp, post bounties, and read stats from your AI agent."
+  }
+}
